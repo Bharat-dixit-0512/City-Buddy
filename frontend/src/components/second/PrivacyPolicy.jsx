@@ -1,6 +1,6 @@
 import React from "react";
 
-import useScrollToTop from "../motion.jsx/useScrollToTop";
+import useScrollToTop from "../motion/useScrollToTop";
 import { Link } from "react-router-dom";
 
 const PrivacyPolicy = () => {

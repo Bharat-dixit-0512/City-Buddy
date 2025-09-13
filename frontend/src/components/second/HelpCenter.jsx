@@ -1,4 +1,4 @@
-import useScrollToTop from "../motion.jsx/useScrollToTop";
+import useScrollToTop from "../motion/useScrollToTop";
 import { NavLink } from "react-router-dom";
 
 const HelpCenter = () => {

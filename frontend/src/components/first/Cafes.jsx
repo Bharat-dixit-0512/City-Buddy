@@ -1,20 +1,27 @@
-import React, { useState } from "react";
-import cafesData from "../API/cafes_1000.json";
-import Cards from "./Cards";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Cards from "../cards/Cards";
 
 function Cafes() {
+  const [cafes, setCafes] = useState([]); 
   const [selectedCafe, setSelectedCafe] = useState(null);
   const [cityFilter, setCityFilter] = useState("");
 
-  const cafes = cafesData.cafes_1000;
+  // ✅ Fetch cafes from backend
+  useEffect(() => {
+    const getCafes = async () => {
+      try {
+        const res = await axios.get("http://localhost:4001/cafes"); // use same port as backend
+        setCafes(res.data); // save data in state
+      } catch (error) {
+        console.error("Error fetching cafes:", error);
+      }
+    };
+    getCafes();
+  }, []);
 
-  const handleCardClick = (item) => {
-    setSelectedCafe(item);
-  };
-
-  const closeModal = () => {
-    setSelectedCafe(null);
-  };
+  const handleCardClick = (item) => setSelectedCafe(item);
+  const closeModal = () => setSelectedCafe(null);
 
   const uniqueCities = [...new Set(cafes.map((item) => item.city))];
 
@@ -24,6 +31,7 @@ function Cafes() {
 
   return (
     <div className="min-h-screen bg-gray-50 px-4 md:px-10 py-10">
+      {/* Header */}
       <div className="text-center mb-10">
         <h1 className="text-4xl md:text-5xl font-bold font-serif text-indigo-700 mb-4 hover:scale-105 duration-200 cursor-pointer">
           Cafes
@@ -35,6 +43,7 @@ function Cafes() {
         </p>
       </div>
 
+      {/* Dropdown filter */}
       <div className="flex justify-center mb-8">
         <select
           value={cityFilter}
@@ -50,10 +59,11 @@ function Cafes() {
         </select>
       </div>
 
+      {/* Cafes Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-10">
         {filteredCafes.length > 0 ? (
           filteredCafes.map((item) => (
-            <div key={item.id} onClick={() => handleCardClick(item)}>
+            <div key={item.id || item._id} onClick={() => handleCardClick(item)}>
               <Cards item={item} />
             </div>
           ))
@@ -64,6 +74,7 @@ function Cafes() {
         )}
       </div>
 
+      {/* Modal */}
       {selectedCafe && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-2xl shadow-lg max-w-lg w-full relative">
@@ -78,8 +89,7 @@ function Cafes() {
               ⭐ {selectedCafe.rating} / 5
             </p>
             <p className="text-gray-700 mb-4">
-              📍 {selectedCafe.area}, {selectedCafe.city} –{" "}
-              {selectedCafe["pin code"]}
+              📍 {selectedCafe.area}, {selectedCafe.city} – {selectedCafe.pincode}
             </p>
             <button
               className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 cursor-pointer rounded-xl"

@@ -1,10 +1,24 @@
-import React, { useState } from "react";
-import { restaurants_1000 } from "../API/restaurants_1000.json";
-import Cards from "./Cards";
+import React, { useState, useEffect } from "react";
+import axios from "axios"; 
+import Cards from "../cards/Cards";
 
 function Hotels() {
   const [selectedHotel, setSelectedHotel] = useState(null);
   const [cityFilter, setCityFilter] = useState("");
+  const [hotels, setHotels] = useState([]);
+
+  // Fetch Hotels
+  useEffect(() => {
+    const getHotels = async () => {
+      try {
+        const res = await axios.get("http://localhost:4001/hotels"); // ✅ match backend route
+        setHotels(res.data); 
+      } catch (error) {
+        console.error("Error fetching hotels:", error);
+      }
+    };
+    getHotels();
+  }, []);
 
   const handleCardClick = (item) => {
     setSelectedHotel(item);
@@ -14,13 +28,13 @@ function Hotels() {
     setSelectedHotel(null);
   };
 
-  
-  const uniqueCities = [...new Set(restaurants_1000.map((item) => item.city))];
+  // Extract unique cities
+  const uniqueCities = [...new Set(hotels.map((item) => item.city))];
 
-  
+  // Apply city filter
   const filteredHotels = cityFilter
-    ? restaurants_1000.filter((item) => item.city === cityFilter)
-    : restaurants_1000;
+    ? hotels.filter((item) => item.city === cityFilter)
+    : hotels;
 
   return (
     <div className="min-h-screen bg-gray-50 px-4 md:px-10 py-10">
@@ -54,10 +68,7 @@ function Hotels() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-10">
         {filteredHotels.length > 0 ? (
           filteredHotels.map((item) => (
-            <div
-              key={item.id}
-              onClick={() => handleCardClick(item)}
-            >
+            <div key={item.id} onClick={() => handleCardClick(item)}>
               <Cards item={item} />
             </div>
           ))

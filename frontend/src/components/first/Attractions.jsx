@@ -1,12 +1,23 @@
-import React, { useState } from "react";
-import attractionsData from "../API/attractions_1000.json";
-import Cards from "./Cards";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Cards from "../cards/Cards";
 
 function Attractions() {
   const [selectedAttraction, setSelectedAttraction] = useState(null);
   const [cityFilter, setCityFilter] = useState("");
+  const [attractions, setAttractions] = useState([]);
 
-  const attractions = attractionsData.attractions_1000;
+  useEffect(() => {
+    const getAttraction = async () => {
+      try {
+        const res = await axios.get("http://localhost:4001/attractions"); // ✅ match backend route
+        setAttractions(res.data); // ✅ correct setter
+      } catch (error) {
+        console.error("Error fetching attractions:", error);
+      }
+    };
+    getAttraction();
+  }, []);
 
   const handleCardClick = (item) => {
     setSelectedAttraction(item);
@@ -33,6 +44,7 @@ function Attractions() {
         </p>
       </div>
 
+      {/* City filter dropdown */}
       <div className="flex justify-center mb-8">
         <select
           value={cityFilter}
@@ -48,6 +60,7 @@ function Attractions() {
         </select>
       </div>
 
+      {/* Attraction cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-10">
         {filteredAttractions.length > 0 ? (
           filteredAttractions.map((item) => (
@@ -62,6 +75,7 @@ function Attractions() {
         )}
       </div>
 
+      {/* Modal */}
       {selectedAttraction && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-2xl shadow-lg max-w-lg w-full relative">
@@ -77,7 +91,7 @@ function Attractions() {
             </p>
             <p className="text-gray-700 mb-4">
               📍 {selectedAttraction.area}, {selectedAttraction.city} –{" "}
-              {selectedAttraction["pin code"]}
+              {selectedAttraction.pincode}
             </p>
             <button
               className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 cursor-pointer rounded-xl"
