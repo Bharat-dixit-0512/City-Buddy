@@ -1,60 +1,39 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
-import bcrypt from "bcryptjs"; // ✅ Import bcryptjs
+import bcrypt from "bcryptjs";
+import { useForm } from "react-hook-form";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    terms: false,
-  });
-
   const [showModal, setShowModal] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
-  };
+  // react-hook-form setup
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    reset,
+  } = useForm();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const password = watch("password");
 
-    // Basic validation
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
-      return;
-    }
-    if (!formData.terms) {
-      alert("You must accept the terms & conditions!");
-      return;
-    }
-
-    // ✅ Hash the password before sending to backend
+  const onSubmit = async (data) => {
+    // ✅ Hash password before sending
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(formData.password, salt);
+    const hashedPassword = await bcrypt.hash(data.password, salt);
 
     const userData = {
-      email: formData.email,
+      email: data.email,
       password: hashedPassword,
     };
 
     console.log("User registered with hashed password:", userData);
-    alert("Signup successful!");
+    alert("Signup successful ✅");
 
-    // Reset form
-    setFormData({
-      email: "",
-      password: "",
-      confirmPassword: "",
-      terms: false,
-    });
+    reset(); // clear form
   };
 
   return (
@@ -65,7 +44,10 @@ const Signup = () => {
             Create an account
           </h1>
 
-          <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+          <form
+            className="space-y-4 md:space-y-6"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             {/* Email */}
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-900">
@@ -73,13 +55,21 @@ const Signup = () => {
               </label>
               <input
                 type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="bg-gray-50 border border-gray-300 text-sm rounded-lg block w-full p-2.5"
                 placeholder="name@company.com"
-                required
+                className="bg-gray-50 border border-gray-300 text-sm rounded-lg block w-full p-2.5"
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "Enter a valid email address",
+                  },
+                })}
               />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
 
             {/* Password */}
@@ -90,12 +80,15 @@ const Signup = () => {
               <div className="relative flex items-center">
                 <input
                   type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
+                  placeholder="Enter your password"
                   className="bg-gray-50 border border-gray-300 text-sm rounded-lg block w-full p-2.5 pr-10"
-                  placeholder="Enter Your Password..."
-                  required
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters",
+                    },
+                  })}
                 />
                 <button
                   type="button"
@@ -105,6 +98,11 @@ const Signup = () => {
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
             {/* Confirm Password */}
@@ -115,27 +113,27 @@ const Signup = () => {
               <div className="relative flex items-center">
                 <input
                   type={showConfirmPassword ? "text" : "password"}
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
+                  placeholder="Confirm your password"
                   className="bg-gray-50 border border-gray-300 text-sm rounded-lg block w-full p-2.5 pr-10"
-                  placeholder="Confirm Your Password..."
-                  required
+                  {...register("confirmPassword", {
+                    required: "Please confirm your password",
+                    validate: (value) =>
+                      value === password || "Passwords do not match",
+                  })}
                 />
                 <button
                   type="button"
-                  onClick={() =>
-                    setShowConfirmPassword(!showConfirmPassword)
-                  }
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 text-gray-500 hover:text-gray-700"
                 >
-                  {showConfirmPassword ? (
-                    <EyeOff size={18} />
-                  ) : (
-                    <Eye size={18} />
-                  )}
+                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.confirmPassword.message}
+                </p>
+              )}
             </div>
 
             {/* Terms */}
@@ -143,11 +141,10 @@ const Signup = () => {
               <input
                 id="terms"
                 type="checkbox"
-                name="terms"
-                checked={formData.terms}
-                onChange={handleChange}
                 className="w-4 h-4 border border-gray-300 rounded"
-                required
+                {...register("terms", {
+                  required: "You must accept the terms & conditions",
+                })}
               />
               <label htmlFor="terms" className="ml-2 text-sm text-gray-500">
                 I accept the{" "}
@@ -160,6 +157,9 @@ const Signup = () => {
                 </button>
               </label>
             </div>
+            {errors.terms && (
+              <p className="text-red-500 text-sm mt-1">{errors.terms.message}</p>
+            )}
 
             {/* Submit */}
             <button
@@ -223,7 +223,11 @@ const Signup = () => {
                 time. Continued use means you accept the new terms.
               </p>
               <p>
-                <strong>9. Contact:</strong> <a href="mailto:komal.pater_cs23@gla.ac.in">komal.pater_cs23@gla.ac.in </a>| <a href="tel:+91 9876543210">+91 9876543210</a>
+                <strong>9. Contact:</strong>{" "}
+                <a href="mailto:komal.pater_cs23@gla.ac.in">
+                  komal.pater_cs23@gla.ac.in
+                </a>{" "}
+                | <a href="tel:+91 9876543210">+91 9876543210</a>
               </p>
             </div>
 

@@ -1,43 +1,29 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import { useForm } from "react-hook-form";
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-    remember: false,
-  });
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // handle input change
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
+  // react-hook-form setup
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  // handle submit
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError("");
+  // on submit
+  const onSubmit = (data) => {
+    const { username, password } = data;
 
-    // simple validation
-    if (!formData.username || !formData.password) {
-      setError("Please fill in all fields.");
-      return;
-    }
-
-    // 👉 dummy login (replace with API/backend later)
-    if (formData.username === "admin" && formData.password === "123456") {
+    // dummy login validation
+    if (username === "admin" && password === "123456") {
       alert("Login successful ✅");
-      navigate("/"); // redirect to home after login
+      navigate("/");
     } else {
-      setError("Invalid username or password ❌");
+      alert("Invalid username or password ❌");
     }
   };
 
@@ -45,26 +31,30 @@ const Login = () => {
     <div className="text-black min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
       <div className="max-w-[480px] w-full">
         <div className="p-6 sm:p-8 rounded-2xl bg-white border border-black shadow-sm">
-          <NavLink to='/'><h1 className="text-slate-900 text-center text-3xl font-semibold">
-            Sign in
-          </h1></NavLink>
+          <NavLink to="/">
+            <h1 className="text-slate-900 text-center text-3xl font-semibold">
+              Sign in
+            </h1>
+          </NavLink>
 
           {/* Login form */}
-          <form onSubmit={handleSubmit} className="mt-12 space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-12 space-y-6">
             {/* Username */}
             <div>
               <label className="text-slate-900 text-sm font-medium mb-2 block">
                 Username
               </label>
               <input
-                name="username"
                 type="text"
-                value={formData.username}
-                onChange={handleChange}
-                className="w-full text-slate-900 text-sm border border-slate-300 px-4 py-3 rounded-md outline-blue-600"
                 placeholder="Enter username"
-                required
+                className="w-full text-slate-900 text-sm border border-slate-300 px-4 py-3 rounded-md outline-blue-600"
+                {...register("username", { required: "Username is required" })}
               />
+              {errors.username && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.username.message}
+                </p>
+              )}
             </div>
 
             {/* Password */}
@@ -74,13 +64,10 @@ const Login = () => {
               </label>
               <div className="relative flex items-center">
                 <input
-                  name="password"
                   type={showPassword ? "text" : "password"}
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="w-full text-slate-900 text-sm border border-slate-300 px-4 py-3 pr-10 rounded-md outline-blue-600"
                   placeholder="Enter password"
-                  required
+                  className="w-full text-slate-900 text-sm border border-slate-300 px-4 py-3 pr-10 rounded-md outline-blue-600"
+                  {...register("password", { required: "Password is required" })}
                 />
                 <button
                   type="button"
@@ -90,6 +77,11 @@ const Login = () => {
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
 
             {/* Remember me + Forgot password */}
@@ -97,12 +89,9 @@ const Login = () => {
               <div className="flex items-center">
                 <input
                   id="remember-me"
-                  name="remember"
                   type="checkbox"
-                  checked={formData.remember}
-                  onChange={handleChange}
                   className="h-4 w-4 text-indigo-600 border-slate-300 rounded"
-                  required
+                  {...register("remember")}
                 />
                 <label
                   htmlFor="remember-me"
@@ -118,9 +107,6 @@ const Login = () => {
                 Forgot password?
               </NavLink>
             </div>
-
-            {/* Error Message */}
-            {error && <p className="text-red-500 text-sm">{error}</p>}
 
             {/* Submit */}
             <div className="!mt-12">
