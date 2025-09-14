@@ -4,7 +4,7 @@ const ContactUs = () => {
     const teamMembers = [
         {
             name: "Komal Patel",
-            role: "Team Leader",
+            role: "Team Leader/Backend",
             email: "komal.patel_cs23@gla.ac.in",
             phone: "+91 94542 58641",
         },
