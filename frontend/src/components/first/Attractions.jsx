@@ -8,9 +8,10 @@ function Attractions() {
   const [attractions, setAttractions] = useState([]);
 
   useEffect(() => {
+    const API = import.meta.env.VITE_API_URL || "http://localhost:4001";
     const getAttraction = async () => {
       try {
-        const res = await axios.get("http://localhost:4001/attractions"); // ✅ match backend route
+        const res = await axios.get(`${API}/attractions`); // ✅ match backend route
         setAttractions(res.data); // ✅ correct setter
       } catch (error) {
         console.error("Error fetching attractions:", error);

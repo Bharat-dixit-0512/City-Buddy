@@ -10,14 +10,14 @@ const Signup = () => {
   const [showModal, setShowModal] = useState(false); 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+  const API = import.meta.env.VITE_API_URL || "http://localhost:4001";
   const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
   const password = watch("password");
 
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:4001/user/signup", {
+      const response = await axios.post(`${API}/user/signup`, {
         username: data.username,
         email: data.email,
         password: data.password,

@@ -10,11 +10,11 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm();
-
+  const API = import.meta.env.VITE_API_URL || "http://localhost:4001";
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:4001/user/login", data);
+      const response = await axios.post(`${API}/user/login`, data);
       toast.success(response.data.message);
       localStorage.setItem("user", JSON.stringify(response.data.user));
       navigate("/"); 

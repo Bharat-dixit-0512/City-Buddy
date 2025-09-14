@@ -10,12 +10,13 @@ function All() {
 
   // ✅ Fetch data from backend on mount
   useEffect(() => {
+    const API = import.meta.env.VITE_API_URL || "http://localhost:4001";
     const fetchData = async () => {
       try {
         const [cafesRes, attractionsRes, restaurantsRes] = await Promise.all([
-          axios.get("http://localhost:4001/cafes"),
-          axios.get("http://localhost:4001/attractions"),
-          axios.get("http://localhost:4001/hotels"),
+          axios.get(`${API}/cafes`),
+          axios.get(`${API}/attractions`),
+          axios.get(`${API}/hotels`),
         ]);
 
         setCafesData(cafesRes.data || []);
