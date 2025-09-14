@@ -20,6 +20,12 @@ const ContactUs = () => {
             email: "avni.yadav_cs23@gla.ac.in",
             phone: "+91 63925 24133",
         },
+        {
+            name: "Love Pandey",
+            role: "Backend dev Helper",
+            email: "love.pandey_cs23@gla.ac.in",
+            phone: "+91 93896 79496",
+        },
     ];
 
     return (
