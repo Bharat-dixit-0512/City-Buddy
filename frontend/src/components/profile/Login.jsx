@@ -18,6 +18,8 @@ const Login = () => {
       toast.success(response.data.message);
       localStorage.setItem("user", JSON.stringify(response.data.user));
       navigate("/"); 
+      window.location.reload();
+
     } catch (error) {
       if (error.response) {
         alert(error.response.data.message || "Login failed");
