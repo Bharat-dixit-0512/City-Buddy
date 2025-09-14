@@ -10,13 +10,12 @@ function All() {
 
   // ✅ Fetch data from backend on mount
   useEffect(() => {
-    const API = import.meta.env.VITE_API_URL || "http://localhost:4001";
     const fetchData = async () => {
       try {
         const [cafesRes, attractionsRes, restaurantsRes] = await Promise.all([
-          axios.get(`${API}/cafes`),
-          axios.get(`${API}/attractions`),
-          axios.get(`${API}/hotels`),
+          axios.get("http://localhost:4001/cafes"),
+          axios.get("http://localhost:4001/attractions"),
+          axios.get("http://localhost:4001/hotels"),
         ]);
 
         setCafesData(cafesRes.data || []);
@@ -46,7 +45,7 @@ function All() {
 
   return (
     <div className="min-h-screen bg-gray-50 px-4 md:px-10 py-10 space-y-16">
-      {/* Unified Page Title */}
+      
       <div className="text-center mb-10">
         <h1 className="text-4xl md:text-5xl font-bold font-serif text-indigo-700 mb-4 hover:scale-105 duration-200 cursor-pointer">
           All Cafes, Attractions & Restaurants

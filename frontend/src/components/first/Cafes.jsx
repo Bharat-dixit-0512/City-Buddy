@@ -9,10 +9,10 @@ function Cafes() {
 
   // ✅ Fetch cafes from backend
   useEffect(() => {
-    const API = import.meta.env.VITE_API_URL || "http://localhost:4001";
+    
     const getCafes = async () => {
       try {
-        const res = await axios.get(`${API}/cafes`); // use same port as backend
+        const res = await axios.get("http://localhost:4001/cafes"); // use same port as backend
         setCafes(res.data); // save data in state
       } catch (error) {
         console.error("Error fetching cafes:", error);

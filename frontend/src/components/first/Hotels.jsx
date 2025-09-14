@@ -9,10 +9,9 @@ function Hotels() {
 
   // Fetch Hotels
   useEffect(() => {
-    const API = import.meta.env.VITE_API_URL || "http://localhost:4001";
     const getHotels = async () => {
       try {
-        const res = await axios.get(`${API}/hotels`); // ✅ match backend route
+        const res = await axios.get("http://localhost:4001/hotels"); // ✅ match backend route
         setHotels(res.data); 
       } catch (error) {
         console.error("Error fetching hotels:", error);
