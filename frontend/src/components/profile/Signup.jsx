@@ -96,14 +96,14 @@ const Signup = () => {
 
             {/* Terms */}
             <div className="flex items-start">
-              <input id="terms" type="checkbox" className="w-4 h-4 border border-gray-300 rounded" {...register("terms", { required: true })} />
+              <input id="terms" type="checkbox" className="w-4 h-4 border border-gray-300 rounded cursor-pointer" {...register("terms", { required: true })} />
               <label htmlFor="terms" className="ml-2 text-sm text-gray-500">
                 I accept the <button type="button" className="text-indigo-600 hover:underline cursor-pointer" onClick={() => setShowModal(true)}>Terms and Conditions</button>
               </label>
             </div>
             {errors.terms && <p className="text-red-500 text-sm mt-1">You must accept the terms</p>}
 
-            <button type="submit" disabled={loading} className="w-full text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg text-sm px-5 py-2.5">
+            <button type="submit" disabled={loading} className="w-full text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg text-sm px-5 py-2.5 cursor-pointer">
               {loading ? "Signing up..." : "Create an account"}
             </button>
 

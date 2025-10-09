@@ -1,4 +1,3 @@
-// components/Navbar.jsx
 import { useEffect, useState } from "react";
 import { CiHeart } from "react-icons/ci";
 import { MdOutlineLocationOn } from "react-icons/md";
@@ -6,9 +5,9 @@ import { NavLink, Link, useNavigate } from "react-router-dom";
 import { userAuth } from "../context/AuthProvider";
 
 const Navbar = () => {
-  const { authUser, logout } = userAuth(); // ✅ access logout function
+  const { authUser, logout } = userAuth(); // access logout function
   const [isSticky, setIsSticky] = useState(false);
-  const navigate = useNavigate(); // ✅ for redirect after logout
+  const navigate = useNavigate(); // for redirect after logout
 
   useEffect(() => {
     const handleScroll = () => setIsSticky(window.scrollY > 0);
@@ -72,7 +71,7 @@ const Navbar = () => {
               <span className="text-gray-800 font-medium">Hi, {authUser.username}</span>
               <button
                 onClick={handleLogout}
-                className="ml-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
+                className="ml-2 px-3 py-1 bg-red-600 text-white rounded hover:bg-red-500 active:bg-red-600 transition cursor-pointer"
               >
                 Logout
               </button>

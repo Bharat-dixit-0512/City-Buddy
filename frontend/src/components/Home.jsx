@@ -26,7 +26,7 @@ const Home = () => {
             Discover trusted stays, charming cafés, and must-see attractions—
             CityBuddy curates your perfect journey.
           </p>
-          <NavLink to='/all'><button className="cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-full shadow-lg transition-all duration-300">
+          <NavLink to='/all'><button className="cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-full hover:shadow-[0_0_10px_rgba(59,130,246,0.5),0_0_20px_rgba(96,165,250,0.4),0_0_40px_rgba(147,197,253,0.3)] transition-all duration-300 ">
             Start Exploring
           </button></NavLink>
         </div>
