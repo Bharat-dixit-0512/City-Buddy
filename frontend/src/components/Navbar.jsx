@@ -5,9 +5,9 @@ import { NavLink, Link, useNavigate } from "react-router-dom";
 import { userAuth } from "../context/AuthProvider";
 
 const Navbar = () => {
-  const { authUser, logout } = userAuth(); // access logout function
+  const { authUser, logout, isAdmin } = userAuth();
   const [isSticky, setIsSticky] = useState(false);
-  const navigate = useNavigate(); // for redirect after logout
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => setIsSticky(window.scrollY > 0);
@@ -16,11 +16,11 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = () => {
-    logout(); // clear context and localStorage
-    navigate("/login"); // redirect to login page
+    logout();
+    navigate("/login");
   };
 
-  const navItems = ["All", "Hotels", "Cafes", "Attractions"];
+  const navItems = ["All", "Restaurants", "Cafes", "Attractions"];
 
   return (
     <header
@@ -69,6 +69,9 @@ const Navbar = () => {
           {authUser ? (
             <>
               <span className="text-gray-800 font-medium">Hi, {authUser.username}</span>
+              {isAdmin && (
+                <NavLink to="/admin" className="ml-3 px-3 py-1 bg-yellow-400 text-gray-900 rounded hover:brightness-95">Admin</NavLink>
+              )}
               <button
                 onClick={handleLogout}
                 className="ml-2 px-3 py-1 bg-red-600 text-white rounded hover:bg-red-500 active:bg-red-600 transition cursor-pointer"

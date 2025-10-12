@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Taj Mahal",
+    "city": "Agra",
+    "area": "Agra Fort",
+    "pincode": "282001",
+    "description": "The Taj Mahal is an ivory-white marble mausoleum on the south bank of the Yamuna river in the Indian city of Agra. It was commissioned in 1632 by the Mughal emperor Shah Jahan to house the tomb of his favourite wife, Mumtaz Mahal.",
+    "image": "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=300&fit=crop",
+    "rating": 4.8
+  },
+  {
+    "id": 2,
+    "name": "Red Fort",
+    "city": "Delhi",
+    "area": "Old Delhi",
+    "pincode": "110006",
+    "description": "The Red Fort is a historic fort in Old Delhi, Delhi in India that served as the main residence of the Mughal Emperors. Emperor Shah Jahan commissioned construction of the Red Fort on 12 May 1638, when he decided to shift his capital from Agra to Delhi.",
+    "image": "https://s7ap1.scene7.com/is/image/incredibleindia/red-fort-delhi-attr-hero?qlt=82&ts=1742170556347",
+    "rating": 4.6
+  },
+  {
+    "id": 3,
+    "name": "Gateway of India",
+    "city": "Mumbai",
+    "area": "Apollo Bunder",
+    "pincode": "400001",
+    "description": "The Gateway of India is an arch-monument built in the early 20th century in the city of Mumbai, India. It was erected to commemorate the landing of King-Emperor George V and Queen Mary at Apollo Bunder on their visit to India in 1911.",
+    "image": "https://www.gokitetours.com/wp-content/uploads/2024/11/Top-9-Fascinating-Facts-About-the-gate-of-India-in-Mumba-1200x720.webp",
+    "rating": 4.5
+  }
+]

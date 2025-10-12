@@ -3,7 +3,9 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4001";
 import toast from "react-hot-toast";
+import { userAuth } from "../../context/AuthProvider";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,14 +13,19 @@ const Login = () => {
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm();
 
+  const { login } = userAuth();
+
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:4001/user/login", data);
+  const response = await axios.post(`${API_BASE}/user/login`, data);
       toast.success(response.data.message);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-      navigate("/"); 
-      window.location.reload();
+      // store via context
+      login(response.data.user, response.data.token);
+      if (response.data.usingFallback) {
+        toast("Server using local fallback storage (development)");
+      }
+      navigate("/");
 
     } catch (error) {
       if (error.response) {

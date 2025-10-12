@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "The Oberoi Mumbai",
+    "city": "Mumbai",
+    "area": "Nariman Point",
+    "pincode": "400021",
+    "description": "A luxury hotel with stunning views of the Arabian Sea. Offers world-class dining, spa services, and elegant rooms.",
+    "image": "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=300&fit=crop",
+    "rating": 4.7
+  },
+  {
+    "id": 2,
+    "name": "ITC Maurya",
+    "city": "Delhi",
+    "area": "Sardar Patel Marg",
+    "pincode": "110021",
+    "description": "A five-star hotel known for its Mughal architecture, fine dining, and luxurious accommodations.",
+    "image": "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=400&h=300&fit=crop",
+    "rating": 4.6
+  },
+  {
+    "id": 3,
+    "name": "The Taj Mahal Palace",
+    "city": "Mumbai",
+    "area": "Apollo Bunder",
+    "pincode": "400001",
+    "description": "An iconic heritage hotel with colonial architecture, multiple restaurants, and proximity to the Gateway of India.",
+    "image": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=400&h=300&fit=crop",
+    "rating": 4.8
+  }
+]
