@@ -11,7 +11,8 @@ function Attractions() {
     
     const getAttraction = async () => {
       try {
-        const res = await axios.get("http://localhost:4001/attractions"); // ✅ match backend route
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4001";
+  const res = await axios.get(`${API_BASE}/attractions`); // ✅ match backend route
         setAttractions(res.data); // ✅ correct setter
       } catch (error) {
         console.error("Error fetching attractions:", error);

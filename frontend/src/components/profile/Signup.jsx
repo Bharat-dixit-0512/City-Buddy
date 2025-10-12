@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4001";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,22 +17,28 @@ const Signup = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:4001/user/signup", {
+      const payload = {
         username: data.username,
         email: data.email,
         password: data.password,
-      });
+      };
+      if (data.adminCode) payload.role = "admin" , payload.adminCode = data.adminCode;
 
-      alert(response.data.message);
+  const response = await axios.post(`${API_BASE}/user/signup`, payload);
+
+  alert(response.data.message + (response.data.usingFallback ? " (stored in local fallback)" : ""));
       reset();
       navigate("/login");
     } catch (error) {
       if (error.response) {
-        alert(error.response.data.message || "Signup failed");
+        // show server-provided message and any detailed error if present
+        const serverMsg = error.response.data?.message || "Signup failed";
+        const serverDetail = error.response.data?.error;
+        alert(serverMsg + (serverDetail ? "\nDetails: " + serverDetail : ""));
       } else {
         alert("Something went wrong. Try again!");
       }
-      console.error(error);
+      console.error("Signup error:", error);
     } finally {
       setLoading(false);
     }

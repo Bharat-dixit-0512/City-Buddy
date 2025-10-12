@@ -12,7 +12,8 @@ function Cafes() {
     
     const getCafes = async () => {
       try {
-        const res = await axios.get("http://localhost:4001/cafes"); // use same port as backend
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4001";
+  const res = await axios.get(`${API_BASE}/cafes`); // use same port as backend
         setCafes(res.data); // save data in state
       } catch (error) {
         console.error("Error fetching cafes:", error);
