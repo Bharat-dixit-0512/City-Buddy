@@ -31,18 +31,18 @@ const ContactUs = () => {
     return (
         <div className="min-h-screen bg-gray-50 text-slate-900 px-6 py-12">
             <div className="max-w-5xl mx-auto">
-                <h1 className="text-5xl font-bold text-center mb-6 hover:scale-105 duration-300 transition-all ease-in-out cursor-pointer">Contact Us</h1>
+                <h1 className="text-5xl font-bold text-center mb-6 hover:scale-105 duration-300 transition-all ease-in-out cursor-pointer drop-shadow-[0_0_2px_rgba(0,0,0,0.4)]">Contact Us</h1>
                 <p className="text-center text-slate-600 mb-12">
                     We’d love to hear from you! Connect with any of our team members
                     below, or fill out the form to send us a message directly.
                 </p>
 
                 {/* Team Members */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 ">
                     {teamMembers.map((member, index) => (
                         <div
                             key={index}
-                            className="bg-white p-6 rounded-2xl shadow-md border border-gray-200 text-center cursor-pointer hover:scale-105 duration-200"
+                            className="bg-white p-6 rounded-2xl shadow-md border border-gray-200 text-center cursor-pointer hover:scale-105 duration-200 drop-shadow-[0_0_8px_rgba(135,206,235,0.8)]"
                         >
                             <h2 className="text-xl font-semibold">{member.name}</h2>
                             <p className="text-indigo-600 mb-2">{member.role}</p>
@@ -114,7 +114,7 @@ const ContactUs = () => {
                         </div>
                         <button
                             type="submit"
-                            className="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700 transition"
+                            className="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700 transition drop-shadow-[0_0_2px_rgba(85,71,237,0.8)]"
                         >
                             Send Message
                         </button>

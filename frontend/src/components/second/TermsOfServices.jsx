@@ -1,9 +1,9 @@
 
 const TermsOfServices = () => {
   return (
-    <div className="min-h-screen bg-gray-50 text-slate-900 px-6 py-12 flex justify-center">
-      <div className="max-w-4xl w-full bg-white shadow-lg rounded-2xl p-8">
-        <h1 className="text-3xl font-bold mb-6 text-center text-indigo-700 hover:scale-105 duration-300 cursor-pointer">
+    <div className="min-h-screen bg-gray-50 text-slate-900 px-6 py-12 flex justify-center ">
+      <div className="max-w-4xl w-full bg-white shadow-lg rounded-2xl p-8 drop-shadow-[0_0_8px_rgba(135,206,235,0.8)]">
+        <h1 className="text-3xl font-bold mb-6 text-center text-indigo-700 hover:scale-105 duration-300 cursor-pointer drop-shadow-[0_0_2px_rgba(85,71,237,0.8)]">
           Terms of Service
         </h1>
         <p className="text-sm text-slate-600 mb-8 text-center">
