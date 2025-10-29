@@ -72,27 +72,27 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-black p-4 md:p-8">
-      <div className="max-w-4xl mx-auto bg-gray-900/50 p-6 md:p-8 rounded-2xl shadow-lg shadow-yellow-500/10 border border-yellow-500/30">
+    <div className="min-h-screen bg-[#F9FAFB] p-4 md:p-8">
+      <div className="max-w-4xl mx-auto bg-[#FFFFFF] p-6 md:p-8 rounded-2xl shadow-lg border border-[#E9ECEF]">
         <div className="mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-yellow-400 mb-2 [text-shadow:_0_0_8px_theme(colors.yellow.500)]">
+          <h1 className="text-2xl md:text-3xl font-bold text-[#212529] mb-2">
             Admin Dashboard
           </h1>
-          <p className="text-yellow-200/80">
+          <p className="text-[#495057]">
             Add new places to the CityBuddy database
           </p>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex flex-wrap gap-2 mb-6 border-b border-yellow-500/30">
+        <div className="flex flex-wrap gap-2 mb-6 border-b border-[#E9ECEF]">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-t-lg font-medium transition-colors duration-300 ${
                 activeTab === tab.id
-                  ? "bg-yellow-500 text-black shadow-md shadow-yellow-500/30"
-                  : "text-yellow-400 hover:bg-yellow-500/10"
+                  ? "bg-[#FF7B54] text-white shadow-md"
+                  : "text-[#0077B6] hover:bg-[#0077B6]/10"
               }`}
             >
               <span>{tab.icon}</span>
@@ -104,7 +104,7 @@ const AdminDashboard = () => {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Name, City, Area, Pincode, Rating */}
+            {/* Form Fields */}
             {[
               { name: "name", label: "Name *", placeholder: `Enter ${activeTab.slice(0, -1)} name`, type: "text", required: true },
               { name: "city", label: "City *", placeholder: "Enter city name", type: "text", required: true },
@@ -113,18 +113,18 @@ const AdminDashboard = () => {
               { name: "rating", label: "Rating (1-5)", placeholder: "e.g., 4.5", type: "number", min: 1, max: 5, step: 0.1 },
             ].map(field => (
               <div key={field.name}>
-                <label className="block text-sm font-medium text-yellow-400 mb-2">{field.label}</label>
+                <label className="block text-sm font-medium text-[#212529] mb-2">{field.label}</label>
                 <input {...field} value={formData[field.name]} onChange={handleInputChange}
-                  className="w-full px-3 py-2 bg-gray-800 text-yellow-200 border border-yellow-500/40 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 placeholder:text-yellow-500/50"
+                  className="w-full px-3 py-2 bg-white text-[#212529] border border-[#E9ECEF] rounded-lg focus:ring-2 focus:ring-[#0077B6] focus:border-[#0077B6] placeholder:text-gray-400"
                 />
               </div>
             ))}
 
             {/* Image URL */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-yellow-400 mb-2">Image URL</label>
+              <label className="block text-sm font-medium text-[#212529] mb-2">Image URL</label>
               <input type="url" name="image" value={formData.image} onChange={handleInputChange}
-                className="w-full px-3 py-2 bg-gray-800 text-yellow-200 border border-yellow-500/40 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 placeholder:text-yellow-500/50"
+                className="w-full px-3 py-2 bg-white text-[#212529] border border-[#E9ECEF] rounded-lg focus:ring-2 focus:ring-[#0077B6] focus:border-[#0077B6] placeholder:text-gray-400"
                 placeholder="https://example.com/image.jpg"
               />
             </div>
@@ -132,10 +132,10 @@ const AdminDashboard = () => {
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-yellow-400 mb-2">Description *</label>
+            <label className="block text-sm font-medium text-[#212529] mb-2">Description *</label>
             <textarea name="description" value={formData.description} onChange={handleInputChange}
               required rows={4}
-              className="w-full px-3 py-2 bg-gray-800 text-yellow-200 border border-yellow-500/40 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 placeholder:text-yellow-500/50"
+              className="w-full px-3 py-2 bg-white text-[#212529] border border-[#E9ECEF] rounded-lg focus:ring-2 focus:ring-[#0077B6] focus:border-[#0077B6] placeholder:text-gray-400"
               placeholder={`Describe this ${activeTab.slice(0, -1)}...`}
             />
           </div>
@@ -143,7 +143,7 @@ const AdminDashboard = () => {
           {/* Submit Button */}
           <div className="flex justify-end">
             <button type="submit" disabled={loading}
-              className="px-6 py-3 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_10px_rgba(250,204,21,0.4)] hover:shadow-[0_0_15px_rgba(250,204,21,0.6)] transition-all duration-300"
+              className="px-6 py-3 bg-[#FF7B54] text-white font-semibold rounded-lg hover:bg-[#E85D04] disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_10px_rgba(255,123,84,0.4)] hover:shadow-[0_0_15px_rgba(232,93,4,0.6)] transition-all duration-300"
             >
               {loading ? "Adding..." : `Add ${activeTab.slice(0, -1)}`}
             </button>

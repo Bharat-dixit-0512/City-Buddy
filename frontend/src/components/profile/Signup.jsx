@@ -30,7 +30,6 @@ const Signup = () => {
         email: data.email,
         password: data.password,
       };
-      // This part for admin registration is kept from your original code
       if (data.adminCode) {
         payload.role = "admin";
         payload.adminCode = data.adminCode;
@@ -58,10 +57,10 @@ const Signup = () => {
   };
 
   return (
-    <section className="min-h-screen bg-black flex flex-col items-center justify-center px-4 py-8">
-      <div className="w-full bg-gray-900/50 rounded-2xl shadow-lg shadow-yellow-500/10 border border-yellow-500/30 sm:max-w-md">
+    <section className="min-h-screen bg-[#F9FAFB] flex flex-col items-center justify-center px-4 py-8">
+      <div className="w-full bg-white rounded-2xl shadow-lg border border-[#E9ECEF] sm:max-w-md">
         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-          <h1 className="text-2xl font-bold text-center text-yellow-400 [text-shadow:_0_0_8px_theme(colors.yellow.500)]">
+          <h1 className="text-2xl font-bold text-center text-[#212529]">
             Create an Account
           </h1>
 
@@ -71,17 +70,17 @@ const Signup = () => {
           >
             {/* Username */}
             <div>
-              <label className="block mb-2 text-sm font-medium text-yellow-400">
-                Username<span className="text-red-400 font-bold text-lg">*</span>
+              <label className="block mb-2 text-sm font-medium text-[#212529]">
+                Username<span className="text-red-500 font-bold text-lg">*</span>
               </label>
               <input
                 type="text"
                 placeholder="Enter your username"
-                className="w-full bg-gray-800 text-yellow-200 border border-yellow-500/40 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-yellow-500 placeholder:text-yellow-500/50"
+                className="w-full bg-white text-[#212529] border border-[#E9ECEF] rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-[#0077B6] placeholder:text-gray-400"
                 {...register("username", { required: true, minLength: 3 })}
               />
               {errors.username && (
-                <p className="text-red-400 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-1">
                   Username is required (min 3 characters).
                 </p>
               )}
@@ -89,13 +88,13 @@ const Signup = () => {
 
             {/* Email */}
             <div>
-              <label className="block mb-2 text-sm font-medium text-yellow-400">
-                Your Email<span className="text-red-400 font-bold text-lg">*</span>
+              <label className="block mb-2 text-sm font-medium text-[#212529]">
+                Your Email<span className="text-red-500 font-bold text-lg">*</span>
               </label>
               <input
                 type="email"
                 placeholder="name@company.com"
-                className="w-full bg-gray-800 text-yellow-200 border border-yellow-500/40 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-yellow-500 placeholder:text-yellow-500/50"
+                className="w-full bg-white text-[#212529] border border-[#E9ECEF] rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-[#0077B6] placeholder:text-gray-400"
                 {...register("email", {
                   required: "Email is required.",
                   pattern: {
@@ -105,7 +104,7 @@ const Signup = () => {
                 })}
               />
               {errors.email && (
-                <p className="text-red-400 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-1">
                   {errors.email.message}
                 </p>
               )}
@@ -113,26 +112,26 @@ const Signup = () => {
 
             {/* Password */}
             <div>
-              <label className="block mb-2 text-sm font-medium text-yellow-400">
-                Password<span className="text-red-400 font-bold text-lg">*</span>
+              <label className="block mb-2 text-sm font-medium text-[#212529]">
+                Password<span className="text-red-500 font-bold text-lg">*</span>
               </label>
               <div className="relative flex items-center">
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
-                  className="w-full bg-gray-800 text-yellow-200 border border-yellow-500/40 rounded-lg p-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-yellow-500 placeholder:text-yellow-500/50"
+                  className="w-full bg-white text-[#212529] border border-[#E9ECEF] rounded-lg p-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-[#0077B6] placeholder:text-gray-400"
                   {...register("password", { required: true, minLength: 6 })}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 text-yellow-400/70 hover:text-yellow-300"
+                  className="absolute right-3 text-[#495057] hover:text-[#212529]"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
               {errors.password && (
-                <p className="text-red-400 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-1">
                   Password must be at least 6 characters.
                 </p>
               )}
@@ -140,14 +139,14 @@ const Signup = () => {
 
             {/* Confirm Password */}
             <div>
-              <label className="block mb-2 text-sm font-medium text-yellow-400">
-                Confirm Password<span className="text-red-400 font-bold text-lg">*</span>
+              <label className="block mb-2 text-sm font-medium text-[#212529]">
+                Confirm Password<span className="text-red-500 font-bold text-lg">*</span>
               </label>
               <div className="relative flex items-center">
                 <input
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="••••••••"
-                  className="w-full bg-gray-800 text-yellow-200 border border-yellow-500/40 rounded-lg p-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-yellow-500 placeholder:text-yellow-500/50"
+                  className="w-full bg-white text-[#212529] border border-[#E9ECEF] rounded-lg p-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-[#0077B6] placeholder:text-gray-400"
                   {...register("confirmPassword", {
                     required: true,
                     validate: (value) =>
@@ -157,13 +156,13 @@ const Signup = () => {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 text-yellow-400/70 hover:text-yellow-300"
+                  className="absolute right-3 text-[#495057] hover:text-[#212529]"
                 >
                   {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
               {errors.confirmPassword && (
-                <p className="text-red-400 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-1">
                   {errors.confirmPassword.message}
                 </p>
               )}
@@ -174,17 +173,17 @@ const Signup = () => {
               <input
                 id="terms"
                 type="checkbox"
-                className="w-4 h-4 border-yellow-500/40 rounded bg-gray-800 focus:ring-yellow-500 accent-yellow-500 cursor-pointer"
+                className="w-4 h-4 border-[#E9ECEF] rounded focus:ring-[#0077B6] accent-[#0077B6] cursor-pointer"
                 {...register("terms", { required: true })}
               />
               <label
                 htmlFor="terms"
-                className="ml-2 text-sm text-yellow-200/80"
+                className="ml-2 text-sm text-[#495057]"
               >
                 I accept the{" "}
                 <button
                   type="button"
-                  className="text-yellow-300 hover:underline cursor-pointer"
+                  className="text-[#00B4D8] hover:underline cursor-pointer font-semibold"
                   onClick={() => setShowModal(true)}
                 >
                   Terms and Conditions
@@ -192,7 +191,7 @@ const Signup = () => {
               </label>
             </div>
             {errors.terms && (
-              <p className="text-red-400 text-sm">
+              <p className="text-red-500 text-sm">
                 You must accept the terms.
               </p>
             )}
@@ -200,16 +199,16 @@ const Signup = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full text-black bg-yellow-500 hover:bg-yellow-400 rounded-lg text-sm font-semibold px-5 py-2.5 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_10px_rgba(250,204,21,0.4)] hover:shadow-[0_0_15px_rgba(250,204,21,0.6)] transition-all duration-300"
+              className="w-full text-white bg-[#FF7B54] hover:bg-[#E85D04] rounded-lg text-sm font-semibold px-5 py-2.5 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_10px_rgba(255,123,84,0.4)] hover:shadow-[0_0_15px_rgba(232,93,4,0.6)] transition-all duration-300"
             >
               {loading ? "Creating Account..." : "Create an Account"}
             </button>
 
-            <p className="text-sm text-yellow-200/80 text-center">
+            <p className="text-sm text-[#495057] text-center">
               Already have an account?{" "}
               <Link
                 to="/login"
-                className="text-yellow-300 hover:underline font-semibold"
+                className="text-[#00B4D8] hover:underline font-semibold"
               >
                 Login here
               </Link>
@@ -221,11 +220,11 @@ const Signup = () => {
       {/* Themed Terms & Conditions Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-          <div className="bg-gray-900 max-w-2xl w-full p-6 rounded-2xl shadow-lg border border-yellow-500/30 m-4">
-            <h2 className="text-xl font-bold text-yellow-400 mb-4">
+          <div className="bg-white max-w-2xl w-full p-6 rounded-2xl shadow-lg border border-[#E9ECEF] m-4">
+            <h2 className="text-xl font-bold text-[#212529] mb-4">
               Terms & Conditions
             </h2>
-            <div className="text-sm text-yellow-200/90 space-y-3 overflow-y-auto max-h-[60vh] pr-2">
+            <div className="text-sm text-[#495057] space-y-3 overflow-y-auto max-h-[60vh] pr-2">
               <p>
                 <strong>1. Acceptance of Terms:</strong> By creating an
                 account, you agree to abide by these Terms & Conditions.
@@ -251,7 +250,7 @@ const Signup = () => {
             <div className="mt-6 flex justify-end">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-5 py-2 bg-yellow-500 text-black rounded-lg hover:bg-yellow-400 font-semibold cursor-pointer transition-colors"
+                className="px-5 py-2 bg-[#FF7B54] text-white rounded-lg hover:bg-[#E85D04] font-semibold cursor-pointer transition-colors"
               >
                 Close
               </button>

@@ -6,14 +6,14 @@ const Footer = () => {
   const { isVisible, scrollToTop } = useScrollToTop();
 
   return (
-    <footer className="bg-black text-white pt-12 pb-6 relative border-t border-yellow-500/20">
+    <footer className="bg-[#023047] text-[#F9FAFB] pt-12 pb-6 relative border-t border-[#E9ECEF]/20">
       <div className="max-w-screen-xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
         {/* Brand / Logo */}
         <div>
-          <h2 className="text-2xl font-bold font-serif text-yellow-400 hover:scale-105 transition-transform duration-300 cursor-pointer [text-shadow:_0_0_8px_theme(colors.yellow.500)]">
+          <h2 className="text-2xl font-bold font-serif text-[#FFD60A] hover:scale-105 transition-transform duration-300 cursor-pointer [text-shadow:_0_0_8px_theme(colors.yellow.500)]">
             CityBuddy
           </h2>
-          <p className="text-yellow-200/70 mt-2 text-sm">
+          <p className="text-[#F9FAFB]/70 mt-2 text-sm">
             Your smart travel companion for discovering the best hotels, cafes,
             and restaurants in every city.
           </p>
@@ -21,15 +21,15 @@ const Footer = () => {
 
         {/* Quick Links */}
         <div>
-          <h3 className="text-xl font-semibold mb-4 text-yellow-400">
+          <h3 className="text-xl font-semibold mb-4 text-[#FFD60A]">
             Quick Links
           </h3>
-          <ul className="space-y-2 text-yellow-200">
+          <ul className="space-y-2 text-[#F9FAFB]">
             <li>
               <Link
                 onClick={scrollToTop}
                 to="/all"
-                className="hover:text-yellow-300 hover:underline transition"
+                className="hover:text-[#00B4D8] hover:underline transition"
               >
                 Explore
               </Link>
@@ -38,7 +38,7 @@ const Footer = () => {
               <Link
                 onClick={scrollToTop}
                 to="/restaurants"
-                className="hover:text-yellow-300 hover:underline transition"
+                className="hover:text-[#00B4D8] hover:underline transition"
               >
                 Restaurants
               </Link>
@@ -47,7 +47,7 @@ const Footer = () => {
               <Link
                 onClick={scrollToTop}
                 to="/cafes"
-                className="hover:text-yellow-300 hover:underline transition"
+                className="hover:text-[#00B4D8] hover:underline transition"
               >
                 Cafes
               </Link>
@@ -56,7 +56,7 @@ const Footer = () => {
               <Link
                 onClick={scrollToTop}
                 to="/attractions"
-                className="hover:text-yellow-300 hover:underline transition"
+                className="hover:text-[#00B4D8] hover:underline transition"
               >
                 Attractions
               </Link>
@@ -66,13 +66,13 @@ const Footer = () => {
 
         {/* Support & Policies */}
         <div>
-          <h3 className="text-xl font-semibold mb-4 text-yellow-400">Support</h3>
-          <ul className="space-y-2 text-yellow-200">
+          <h3 className="text-xl font-semibold mb-4 text-[#FFD60A]">Support</h3>
+          <ul className="space-y-2 text-[#F9FAFB]">
             <li>
               <Link
                 onClick={scrollToTop}
                 to="/HelpCenter"
-                className="hover:text-yellow-300 hover:underline transition"
+                className="hover:text-[#00B4D8] hover:underline transition"
               >
                 Help Center
               </Link>
@@ -81,7 +81,7 @@ const Footer = () => {
               <Link
                 onClick={scrollToTop}
                 to="/ContactUs"
-                className="hover:text-yellow-300 hover:underline transition"
+                className="hover:text-[#00B4D8] hover:underline transition"
               >
                 Contact Us
               </Link>
@@ -90,7 +90,7 @@ const Footer = () => {
               <Link
                 to="/TermsOfServices"
                 onClick={scrollToTop}
-                className="hover:text-yellow-300 hover:underline transition"
+                className="hover:text-[#00B4D8] hover:underline transition"
               >
                 Terms of Services
               </Link>
@@ -99,7 +99,7 @@ const Footer = () => {
               <Link
                 onClick={scrollToTop}
                 to="/PrivacyPolicy"
-                className="hover:text-yellow-300 hover:underline transition"
+                className="hover:text-[#00B4D8] hover:underline transition"
               >
                 Privacy Policy
               </Link>
@@ -108,12 +108,12 @@ const Footer = () => {
         </div>
       </div>
 
-      <hr className="mt-8 border-yellow-500/20 w-full max-w-screen-xl mx-auto" />
+      <hr className="mt-8 border-[#E9ECEF]/20 w-full max-w-screen-xl mx-auto" />
 
       {/* Copyright */}
       <div className="text-center text-sm text-gray-400 mt-5 px-4">
         &copy; 2025{" "}
-        <span className="font-semibold text-yellow-400">CityBuddy</span> | All
+        <span className="font-semibold text-[#FFD60A]">CityBuddy</span> | All
         Rights Reserved
       </div>
 
@@ -121,7 +121,7 @@ const Footer = () => {
       {isVisible && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 bg-yellow-500 hover:bg-yellow-400 text-black p-3 rounded-full shadow-[0_0_15px_rgba(250,204,21,0.5)] hover:shadow-[0_0_20px_rgba(250,204,21,0.7)] transition-all"
+          className="fixed bottom-6 right-6 bg-[#FF7B54] hover:bg-[#E85D04] text-white p-3 rounded-full shadow-[0_0_15px_rgba(255,123,84,0.5)] hover:shadow-[0_0_20px_rgba(255,123,84,0.7)] transition-all"
           aria-label="Back to top"
         >
           <ChevronUp size={22} />

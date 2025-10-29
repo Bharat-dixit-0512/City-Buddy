@@ -29,12 +29,12 @@ const ContactUs = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-yellow-200/90 px-6 py-12">
+    <div className="min-h-screen bg-[#F9FAFB] text-[#495057] px-6 py-12">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl md:text-5xl font-bold text-center mb-6 text-yellow-400 [text-shadow:_0_0_10px_theme(colors.yellow.500)]">
+        <h1 className="text-4xl md:text-5xl font-bold text-center mb-6 text-[#212529]">
           Contact Us
         </h1>
-        <p className="text-center text-yellow-200/80 mb-12 max-w-2xl mx-auto">
+        <p className="text-center text-[#495057] mb-12 max-w-2xl mx-auto">
           We’d love to hear from you! Connect with any of our team members
           below, or fill out the form to send us a message directly.
         </p>
@@ -44,18 +44,18 @@ const ContactUs = () => {
           {teamMembers.map((member, index) => (
             <div
               key={index}
-              className="bg-gray-900/50 p-6 rounded-2xl shadow-lg shadow-yellow-500/10 border border-yellow-500/30 text-center transition-transform duration-300 hover:scale-105 hover:shadow-yellow-500/20"
+              className="bg-white p-6 rounded-2xl shadow-lg border border-[#E9ECEF] text-center transition-transform duration-300 hover:scale-105 hover:shadow-xl"
             >
-              <h2 className="text-xl font-semibold text-yellow-300">
+              <h2 className="text-xl font-semibold text-[#023047]">
                 {member.name}
               </h2>
-              <p className="text-yellow-400/80 mb-3">{member.role}</p>
+              <p className="text-[#0077B6] font-medium mb-3">{member.role}</p>
               <p className="text-sm">
                 <a
                   href={`mailto:${member.email}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-yellow-200 hover:underline hover:text-yellow-100 break-all"
+                  className="text-[#495057] hover:underline hover:text-[#00B4D8] break-all"
                 >
                   📧 {member.email}
                 </a>
@@ -65,7 +65,7 @@ const ContactUs = () => {
                   href={`tel:${member.phone}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-yellow-200 hover:underline hover:text-yellow-100"
+                  className="text-[#495057] hover:underline hover:text-[#00B4D8]"
                 >
                   📞 {member.phone}
                 </a>
@@ -75,54 +75,54 @@ const ContactUs = () => {
         </div>
 
         {/* Contact Form */}
-        <div className="bg-gray-900/50 p-8 rounded-2xl shadow-lg shadow-yellow-500/10 border border-yellow-500/30 max-w-2xl mx-auto">
-          <h2 className="text-2xl font-semibold mb-6 text-center text-yellow-400">
+        <div className="bg-white p-8 rounded-2xl shadow-lg border border-[#E9ECEF] max-w-2xl mx-auto">
+          <h2 className="text-2xl font-semibold mb-6 text-center text-[#212529]">
             Send Us a Message
           </h2>
           <form
             className="space-y-4"
-            action="https://formspree.io/f/xldlkvol" 
+            action="https://formspree.io/f/xldlkvol"
             method="POST"
           >
             <div>
-              <label className="block text-sm font-medium mb-2 text-yellow-400">
+              <label className="block text-sm font-medium mb-2 text-[#212529]">
                 Your Name
               </label>
               <input
                 type="text"
                 name="name"
                 placeholder="Enter your name"
-                className="w-full bg-gray-800 text-yellow-200 border border-yellow-500/40 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 placeholder:text-yellow-500/50"
+                className="w-full bg-white text-[#212529] border border-[#E9ECEF] rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#0077B6] placeholder:text-gray-400"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2 text-yellow-400">
+              <label className="block text-sm font-medium mb-2 text-[#212529]">
                 Your Email
               </label>
               <input
                 type="email"
                 name="email"
                 placeholder="Enter your email"
-                className="w-full bg-gray-800 text-yellow-200 border border-yellow-500/40 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 placeholder:text-yellow-500/50"
+                className="w-full bg-white text-[#212529] border border-[#E9ECEF] rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#0077B6] placeholder:text-gray-400"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2 text-yellow-400">
+              <label className="block text-sm font-medium mb-2 text-[#212529]">
                 Message
               </label>
               <textarea
                 name="message"
                 rows="4"
                 placeholder="Write your message here..."
-                className="w-full bg-gray-800 text-yellow-200 border border-yellow-500/40 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 placeholder:text-yellow-500/50"
+                className="w-full bg-white text-[#212529] border border-[#E9ECEF] rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#0077B6] placeholder:text-gray-400"
                 required
               />
             </div>
             <button
               type="submit"
-              className="w-full bg-yellow-500 text-black font-semibold py-3 rounded-lg hover:bg-yellow-400 disabled:opacity-50 shadow-[0_0_10px_rgba(250,204,21,0.4)] hover:shadow-[0_0_15px_rgba(250,204,21,0.6)] transition-all duration-300"
+              className="w-full bg-[#FF7B54] text-white font-semibold py-3 rounded-lg hover:bg-[#E85D04] disabled:opacity-50 shadow-[0_0_10px_rgba(255,123,84,0.4)] hover:shadow-[0_0_15px_rgba(232,93,4,0.6)] transition-all duration-300"
             >
               Send Message
             </button>
@@ -133,4 +133,4 @@ const ContactUs = () => {
   );
 };
 
-export default ContactUs;5
+export default ContactUs;

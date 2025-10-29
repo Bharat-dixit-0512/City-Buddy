@@ -44,23 +44,23 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-black px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#F9FAFB] px-4">
       <div className="max-w-md w-full">
-        <div className="p-6 sm:p-8 rounded-2xl bg-gray-900/50 border border-yellow-500/30 shadow-lg shadow-yellow-500/10">
-          <h1 className="text-yellow-400 text-center text-3xl font-semibold [text-shadow:_0_0_8px_theme(colors.yellow.500)]">
+        <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#E9ECEF] shadow-lg">
+          <h1 className="text-[#212529] text-center text-3xl font-semibold">
             Sign In
           </h1>
 
           <form onSubmit={handleSubmit(onSubmit)} className="mt-12 space-y-6">
             {/* Email */}
             <div>
-              <label className="text-yellow-400 text-sm font-medium mb-2 block">
-                Email ID<span className="text-red-400 font-bold text-lg">*</span>
+              <label className="text-[#212529] text-sm font-medium mb-2 block">
+                Email ID<span className="text-red-500 font-bold text-lg">*</span>
               </label>
               <input
                 type="email"
                 placeholder="Enter email"
-                className="w-full bg-gray-800 text-yellow-200 border border-yellow-500/40 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-500 placeholder:text-yellow-500/50"
+                className="w-full bg-white text-[#212529] border border-[#E9ECEF] rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#0077B6] placeholder:text-gray-400"
                 {...register("email", {
                   required: "Email is required",
                   pattern: {
@@ -70,7 +70,7 @@ const Login = () => {
                 })}
               />
               {errors.email && (
-                <p className="text-red-400 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-1">
                   {errors.email.message}
                 </p>
               )}
@@ -78,15 +78,15 @@ const Login = () => {
 
             {/* Password */}
             <div>
-              <label className="text-yellow-400 text-sm font-medium mb-2 block">
+              <label className="text-[#212529] text-sm font-medium mb-2 block">
                 Password
-                <span className="text-red-400 font-bold text-lg">*</span>
+                <span className="text-red-500 font-bold text-lg">*</span>
               </label>
               <div className="relative flex items-center">
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter password"
-                  className="w-full bg-gray-800 text-yellow-200 border border-yellow-500/40 rounded-lg px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-yellow-500 placeholder:text-yellow-500/50"
+                  className="w-full bg-white text-[#212529] border border-[#E9ECEF] rounded-lg px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-[#0077B6] placeholder:text-gray-400"
                   {...register("password", {
                     required: "Password is required",
                   })}
@@ -94,13 +94,13 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 text-yellow-400/70 hover:text-yellow-300 cursor-pointer"
+                  className="absolute right-3 text-[#495057] hover:text-[#212529] cursor-pointer"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
               {errors.password && (
-                <p className="text-red-400 text-sm mt-1">
+                <p className="text-red-500 text-sm mt-1">
                   {errors.password.message}
                 </p>
               )}
@@ -109,16 +109,16 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 text-base font-semibold tracking-wide rounded-lg text-black bg-yellow-500 hover:bg-yellow-400 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_10px_rgba(250,204,21,0.4)] hover:shadow-[0_0_15px_rgba(250,204,21,0.6)] transition-all duration-300"
+              className="w-full py-3 px-4 text-base font-semibold tracking-wide rounded-lg text-white bg-[#FF7B54] hover:bg-[#E85D04] focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_10px_rgba(255,123,84,0.4)] hover:shadow-[0_0_15px_rgba(232,93,4,0.6)] transition-all duration-300"
             >
               {loading ? "Signing In..." : "Sign In"}
             </button>
 
-            <p className="text-yellow-200/80 text-sm !mt-6 text-center">
+            <p className="text-[#495057] text-sm !mt-6 text-center">
               Don’t have an account?{" "}
               <NavLink
                 to="/signup"
-                className="text-yellow-300 hover:underline ml-1 font-semibold"
+                className="text-[#00B4D8] hover:underline ml-1 font-semibold"
               >
                 Register here
               </NavLink>
