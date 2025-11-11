@@ -1,12 +1,19 @@
 import express from "express";
-import { signup, login } from "../controller/user.controller.js";
+import {
+  signup,
+  login,
+  toggleFavorite,
+  getFavorites,
+  getMe,
+} from "../controller/user.controller.js";
+import { verifyToken } from "../controller/auth.middleware.js";
 
 const router = express.Router();
 
-// POST /user/signup
 router.post("/signup", signup);
-
-// POST /user/login
 router.post("/login", login);
+router.get("/me", verifyToken, getMe);
+router.get("/favorites", verifyToken, getFavorites);
+router.post("/favorites/:itemType/:itemId", verifyToken, toggleFavorite);
 
 export default router;
