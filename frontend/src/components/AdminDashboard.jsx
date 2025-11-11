@@ -1,154 +1,169 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { userAuth } from "../context/AuthProvider";
+import { Edit, Trash2 } from "lucide-react";
+import Spinner from "./shared/Spinner";
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4001";
 
 const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState("attractions");
-  const [formData, setFormData] = useState({
-    name: "",
-    city: "",
-    area: "",
-    pincode: "",
-    description: "",
-    image: "",
-    rating: "",
-  });
+  const [activeTab, setActiveTab] = useState("Restaurant");
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { token } = userAuth();
+  const [isEditing, setIsEditing] = useState(null);
+  const [formData, setFormData] = useState({ name: "", city: "", area: "", pincode: "", description: "", image: "", latitude: "", longitude: "", rating: "", tags: "", priceForTwo: "", pricePerNight: "", priceCategory: "Mid-Range", category: "Restaurant" });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const fetchData = async () => {
     setLoading(true);
-    const payload = { ...formData };
-    if (!payload.image) delete payload.image;
-    if (!payload.rating) delete payload.rating;
-    else payload.rating = parseFloat(payload.rating);
-
     try {
-      const endpoint = `/${activeTab}`;
-      const API_BASE =
-        import.meta.env.VITE_API_BASE_URL || "http://localhost:4001";
-
-      await axios.post(`${API_BASE}${endpoint}`, payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      toast.success(`${activeTab.slice(0, -1)} added successfully!`);
-      // Reset form
-      setFormData({
-        name: "",
-        city: "",
-        area: "",
-        pincode: "",
-        description: "",
-        image: "",
-        rating: "",
-      });
+      const res = await axios.get(`${API_BASE}/places?category=${activeTab}`);
+      setItems(res.data.data || []);
     } catch (error) {
-      console.error("Error adding item:", error);
-      toast.error(
-        error.response?.data?.message || "Failed to add item. Please try again."
-      );
+      toast.error(`Failed to fetch ${activeTab}s`);
     } finally {
       setLoading(false);
     }
   };
 
-  const tabs = [
-    { id: "attractions", label: "Add Attraction", icon: "🏛️" },
-    { id: "cafes", label: "Add Cafe", icon: "☕" },
-    { id: "restaurants", label: "Add Restaurant", icon: "🏨" },
-  ];
+  useEffect(() => {
+    fetchData();
+  }, [activeTab]);
+  
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+    resetForm(tab);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const resetForm = (category = activeTab) => {
+    setFormData({ name: "", city: "", area: "", pincode: "", description: "", image: "", latitude: "", longitude: "", rating: "", tags: "", priceForTwo: "", pricePerNight: "", priceCategory: "Mid-Range", category });
+    setIsEditing(null);
+  };
+
+  const handleEdit = (item) => {
+    setIsEditing(item._id);
+    setFormData({
+      ...item,
+      tags: item.tags ? item.tags.join(', ') : "",
+    });
+    window.scrollTo(0, 0);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this item?")) {
+      try {
+        await axios.delete(`${API_BASE}/places/${id}`);
+        toast.success("Item deleted successfully!");
+        fetchData();
+      } catch (error) {
+        toast.error("Failed to delete item.");
+      }
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const payload = { ...formData, category: activeTab, latitude: parseFloat(formData.latitude) || undefined, longitude: parseFloat(formData.longitude) || undefined, rating: parseFloat(formData.rating) || 0, priceForTwo: parseFloat(formData.priceForTwo) || undefined, pricePerNight: parseFloat(formData.pricePerNight) || undefined };
+    try {
+      if (isEditing) {
+        await axios.put(`${API_BASE}/places/${isEditing}`, payload);
+        toast.success("Item updated successfully!");
+      } else {
+        await axios.post(`${API_BASE}/places`, payload);
+        toast.success("Item added successfully!");
+      }
+      resetForm();
+      fetchData();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Operation failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  const tabs = [{ id: "Restaurant", label: "Restaurants" }, { id: "Hotel", label: "Hotels" }, { id: "Guesthouse", label: "Guesthouses" }, { id: "Cafe", label: "Cafes" }, { id: "Attraction", label: "Attractions" }];
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] p-4 md:p-8">
-      <div className="max-w-4xl mx-auto bg-[#FFFFFF] p-6 md:p-8 rounded-2xl shadow-lg border border-[#E9ECEF]">
-        <div className="mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-[#212529] mb-2">
-            Admin Dashboard
-          </h1>
-          <p className="text-[#495057]">
-            Add new places to the CityBuddy database
-          </p>
-        </div>
-
-        {/* Tab Navigation */}
-        <div className="flex flex-wrap gap-2 mb-6 border-b border-[#E9ECEF]">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-t-lg font-medium transition-colors duration-300 ${
-                activeTab === tab.id
-                  ? "bg-[#FF7B54] text-white shadow-md"
-                  : "text-[#0077B6] hover:bg-[#0077B6]/10"
-              }`}
-            >
-              <span>{tab.icon}</span>
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Form Fields */}
-            {[
-              { name: "name", label: "Name *", placeholder: `Enter ${activeTab.slice(0, -1)} name`, type: "text", required: true },
-              { name: "city", label: "City *", placeholder: "Enter city name", type: "text", required: true },
-              { name: "area", label: "Area *", placeholder: "Enter area/location", type: "text", required: true },
-              { name: "pincode", label: "Pincode *", placeholder: "Enter pincode", type: "text", required: true },
-              { name: "rating", label: "Rating (1-5)", placeholder: "e.g., 4.5", type: "number", min: 1, max: 5, step: 0.1 },
-            ].map(field => (
-              <div key={field.name}>
-                <label className="block text-sm font-medium text-[#212529] mb-2">{field.label}</label>
-                <input {...field} value={formData[field.name]} onChange={handleInputChange}
-                  className="w-full px-3 py-2 bg-white text-[#212529] border border-[#E9ECEF] rounded-lg focus:ring-2 focus:ring-[#0077B6] focus:border-[#0077B6] placeholder:text-gray-400"
-                />
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-1 bg-white p-6 rounded-2xl shadow-lg border">
+            <h2 className="text-2xl font-bold mb-4">{isEditing ? `Edit ${activeTab}` : `Add New ${activeTab}`}</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+               {["name", "city", "area", "pincode", "image", "tags"].map(field => (
+                <div key={field}>
+                  <label className="block text-sm font-medium capitalize">{field} {field === 'tags' && '(comma-separated)'}</label>
+                  <input type="text" name={field} value={formData[field]} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-lg" required={['name','city','area','pincode'].includes(field)} />
+                </div>
+              ))}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                    <label className="block text-sm font-medium">Latitude</label>
+                    <input type="number" step="any" name="latitude" value={formData.latitude} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-lg" />
+                </div>
+                 <div>
+                    <label className="block text-sm font-medium">Longitude</label>
+                    <input type="number" step="any" name="longitude" value={formData.longitude} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-lg" />
+                </div>
               </div>
-            ))}
+              
+              {activeTab === 'Restaurant' && (
+                <>
+                    <div>
+                        <label className="block text-sm font-medium">Price For Two (₹)</label>
+                        <input type="number" name="priceForTwo" value={formData.priceForTwo} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-lg" />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium">Price Category</label>
+                        <select name="priceCategory" value={formData.priceCategory} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-lg bg-white"><option value="Budget">Budget</option><option value="Mid-Range">Mid-Range</option><option value="Luxury">Luxury</option></select>
+                    </div>
+                </>
+              )}
 
-            {/* Image URL */}
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-[#212529] mb-2">Image URL</label>
-              <input type="url" name="image" value={formData.image} onChange={handleInputChange}
-                className="w-full px-3 py-2 bg-white text-[#212529] border border-[#E9ECEF] rounded-lg focus:ring-2 focus:ring-[#0077B6] focus:border-[#0077B6] placeholder:text-gray-400"
-                placeholder="https://example.com/image.jpg"
-              />
+              {(activeTab === 'Hotel' || activeTab === 'Guesthouse') && (
+                <div>
+                    <label className="block text-sm font-medium">Price Per Night (₹)</label>
+                    <input type="number" name="pricePerNight" value={formData.pricePerNight} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-lg" />
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-medium">Description</label>
+                <textarea name="description" value={formData.description} onChange={handleInputChange} required rows={4} className="w-full px-3 py-2 border rounded-lg" />
+              </div>
+              <div className="flex gap-4">
+                <button type="submit" disabled={loading} className="px-6 py-2 bg-[#FF7B54] text-white rounded-lg w-full">{loading ? "Saving..." : isEditing ? "Update" : "Add"}</button>
+                {isEditing && <button type="button" onClick={() => resetForm()} className="px-6 py-2 bg-gray-300 rounded-lg w-full">Cancel</button>}
+              </div>
+            </form>
+          </div>
+          <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-lg border">
+            <div className="flex gap-2 mb-4 border-b flex-wrap">
+              {tabs.map((tab) => (
+                <button key={tab.id} onClick={() => handleTabClick(tab.id)} className={`px-4 py-2 font-medium ${activeTab === tab.id ? "border-b-2 border-[#FF7B54] text-[#FF7B54]" : "text-gray-600"}`}>{tab.label}</button>
+              ))}
             </div>
+            {loading ? <Spinner /> : (
+              <div className="space-y-3">
+                {items.length > 0 ? items.map(item => (
+                  <div key={item._id} className="flex justify-between items-center p-3 border rounded-lg">
+                    <span>{item.name} - <span className="text-sm text-gray-500">{item.city}</span></span>
+                    <div className="flex gap-3">
+                      <button onClick={() => handleEdit(item)}><Edit size={18} className="text-blue-500" /></button>
+                      <button onClick={() => handleDelete(item._id)}><Trash2 size={18} className="text-red-500" /></button>
+                    </div>
+                  </div>
+                )) : <p>No {activeTab}s found.</p>}
+              </div>
+            )}
           </div>
-
-          {/* Description */}
-          <div>
-            <label className="block text-sm font-medium text-[#212529] mb-2">Description *</label>
-            <textarea name="description" value={formData.description} onChange={handleInputChange}
-              required rows={4}
-              className="w-full px-3 py-2 bg-white text-[#212529] border border-[#E9ECEF] rounded-lg focus:ring-2 focus:ring-[#0077B6] focus:border-[#0077B6] placeholder:text-gray-400"
-              placeholder={`Describe this ${activeTab.slice(0, -1)}...`}
-            />
-          </div>
-
-          {/* Submit Button */}
-          <div className="flex justify-end">
-            <button type="submit" disabled={loading}
-              className="px-6 py-3 bg-[#FF7B54] text-white font-semibold rounded-lg hover:bg-[#E85D04] disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_10px_rgba(255,123,84,0.4)] hover:shadow-[0_0_15px_rgba(232,93,4,0.6)] transition-all duration-300"
-            >
-              {loading ? "Adding..." : `Add ${activeTab.slice(0, -1)}`}
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   );

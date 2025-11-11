@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom";
+import { RouterProvider, createBrowserRouter, Outlet, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./components/Home";
 import Login from "./components/profile/Login";
@@ -8,22 +8,19 @@ import TermsOfServices from "./components/second/TermsOfServices";
 import ContactUs from "./components/second/ContactUs";
 import HelpCenter from "./components/second/HelpCenter";
 import PrivacyPolicy from "./components/second/PrivacyPolicy";
-
-import Restaurants from "./components/first/Restaurants"; // Renamed from Hotels
-import Cafes from "./components/first/Cafes";
-import Attractions from "./components/first/Attractions";
-import All from "./components/first/All";
+import CategoryPage from "./pages/CategoryPage";
+import SearchResults from "./pages/SearchResults";
+import Favorites from "./pages/Favorites";
+import MapView from "./pages/MapView";
 import ScrollToTop from "./components/motion/ScrollToTop";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminDashboard from "./components/AdminDashboard";
 import { userAuth } from "./context/AuthProvider";
-import { Navigate } from "react-router-dom";
 
-// Component to handle root path redirection
 const RootRedirect = () => {
   const { authUser } = userAuth();
-  return authUser ? <Navigate to="/all" replace /> : <Home />;
+  return authUser ? <Home /> : <Home />;
 };
 
 function Layout() {
@@ -32,19 +29,10 @@ function Layout() {
       <Toaster />
       <Navbar />
       <ScrollToTop />
-      <Outlet />
+      <div className="flex-grow">
+        <Outlet />
+      </div>
       <Footer />
-    </>
-  );
-}
-
-function LayoutNoFooter() {
-  return (
-    <>
-      <Toaster />
-      <Navbar />
-      <ScrollToTop />
-      <Outlet />
     </>
   );
 }
@@ -55,57 +43,49 @@ function App() {
       element: <Layout />,
       children: [
         { path: "/", element: <RootRedirect /> },
-        { path: "/TermsOfServices", element: <TermsOfServices /> },
-        { path: "/ContactUs", element: <ContactUs /> },
-        { path: "/HelpCenter", element: <HelpCenter /> },
-        { path: "/PrivacyPolicy", element: <PrivacyPolicy /> },
+        { path: "/termsOfServices", element: <TermsOfServices /> },
+        { path: "/contactUs", element: <ContactUs /> },
+        { path: "/helpCenter", element: <HelpCenter /> },
+        { path: "/privacyPolicy", element: <PrivacyPolicy /> },
+        { path: "/login", element: <Login /> },
+        { path: "/signup", element: <Signup /> },
         {
-          path: "/restaurants", // Corrected path
-          element: (
-            <ProtectedRoute>
-              <Restaurants />
-            </ProtectedRoute>
-          ),
+          path: "/restaurants",
+          element: <ProtectedRoute><CategoryPage category="Restaurant" title="Restaurants" description="Discover top-rated restaurants." /></ProtectedRoute>,
         },
         {
           path: "/cafes",
-          element: (
-            <ProtectedRoute>
-              <Cafes />
-            </ProtectedRoute>
-          ),
+          element: <ProtectedRoute><CategoryPage category="Cafe" title="Cafes" description="Explore the best cafes for a perfect break." /></ProtectedRoute>,
         },
         {
           path: "/attractions",
-          element: (
-            <ProtectedRoute>
-              <Attractions />
-            </ProtectedRoute>
-          ),
+          element: <ProtectedRoute><CategoryPage category="Attraction" title="Attractions" description="Discover top attractions across India." /></ProtectedRoute>,
+        },
+        {
+          path: "/hotels",
+          element: <ProtectedRoute><CategoryPage category="Hotel" title="Hotels" description="Find the perfect hotel for your stay." /></ProtectedRoute>,
+        },
+        {
+          path: "/guesthouses",
+          element: <ProtectedRoute><CategoryPage category="Guesthouse" title="Guesthouses" description="Find cozy and affordable guesthouses." /></ProtectedRoute>,
+        },
+        {
+          path: "/search",
+          element: <ProtectedRoute><SearchResults /></ProtectedRoute>,
+        },
+        {
+          path: "/favorites",
+          element: <ProtectedRoute><Favorites /></ProtectedRoute>,
+        },
+        {
+          path: "/map",
+          element: <ProtectedRoute><MapView /></ProtectedRoute>,
         },
         {
           path: "/admin",
-          element: (
-            <ProtectedRoute adminOnly={true}>
-              <AdminDashboard />
-            </ProtectedRoute>
-          ),
+          element: <ProtectedRoute adminOnly={true}><AdminDashboard /></ProtectedRoute>,
         },
-        {
-          path: "/all",
-          element: (
-            <ProtectedRoute>
-              <All />
-            </ProtectedRoute>
-          ),
-        },
-      ],
-    },
-    {
-      element: <LayoutNoFooter />,
-      children: [
-        { path: "/login", element: <Login /> },
-        { path: "/signup", element: <Signup /> },
+        { path: "*", element: <Navigate to="/" replace /> },
       ],
     },
   ]);

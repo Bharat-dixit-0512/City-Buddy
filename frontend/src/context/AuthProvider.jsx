@@ -1,81 +1,94 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4001";
 const AuthContext = createContext();
 
-// A simple loading component to show while we check for a user session
-const FullPageLoader = () => {
-  return (
-    <div style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '100vh',
-      fontSize: '1.5rem',
-      fontFamily: 'sans-serif',
-      color: '#4F46E5' // Indigo color
-    }}>
-      Loading...
-    </div>
-  );
-};
+const FullPageLoader = () => (
+  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', fontSize: '1.5rem', color: '#4F46E5' }}>
+    Loading...
+  </div>
+);
 
 const AuthProvider = ({ children }) => {
   const [authUser, setAuthUser] = useState(null);
-  const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(true); // <-- 1. Add loading state, initially true
+  const [token, setToken] = useState(localStorage.getItem("authToken") || null);
+  const [loading, setLoading] = useState(true);
+
+  const configureAxios = (jwtToken) => {
+    if (jwtToken) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${jwtToken}`;
+    } else {
+      delete axios.defaults.headers.common["Authorization"];
+    }
+  };
+
+  const logout = useCallback(() => {
+    setAuthUser(null);
+    setToken(null);
+    localStorage.removeItem("authUser");
+    localStorage.removeItem("authToken");
+    configureAxios(null);
+    toast.success("Logged out successfully");
+  }, []);
 
   useEffect(() => {
-    try {
-      const storedUser = localStorage.getItem("authUser");
-      const storedToken = localStorage.getItem("authToken");
-
-      if (storedUser && storedToken) {
-        const parsedUser = JSON.parse(storedUser);
-        setAuthUser(parsedUser);
-        setToken(storedToken);
-        axios.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
+    const initializeAuth = async () => {
+      if (token) {
+        configureAxios(token);
+        try {
+          const res = await axios.get(`${API_BASE}/user/me`);
+          setAuthUser(res.data);
+        } catch (error) {
+          console.error("Session expired or invalid", error);
+          logout();
+        }
       }
-    } catch (error) {
-      // If there's an error (e.g., malformed JSON), clear storage and log out
-      console.error("Failed to parse auth user from storage", error);
-      logout();
-    } finally {
-      // <-- 2. Set loading to false after the check is complete
       setLoading(false);
-    }
-  }, []);
+    };
+    initializeAuth();
+  }, [token, logout]);
 
   const login = (userData, jwtToken) => {
     setAuthUser(userData);
     setToken(jwtToken);
     localStorage.setItem("authUser", JSON.stringify(userData));
-    if (jwtToken) {
-      localStorage.setItem("authToken", jwtToken);
-      axios.defaults.headers.common["Authorization"] = `Bearer ${jwtToken}`;
+    localStorage.setItem("authToken", jwtToken);
+    configureAxios(jwtToken);
+  };
+
+  const isFavorite = (itemId) => {
+    return authUser?.favorites?.some((fav) => fav.item === itemId);
+  };
+
+  const toggleFavorite = async (itemId, itemType) => {
+    if (!authUser) {
+      toast.error("You must be logged in to add favorites.");
+      return;
+    }
+    try {
+      const res = await axios.post(`${API_BASE}/user/favorites/${itemType}/${itemId}`);
+      setAuthUser(res.data);
+      localStorage.setItem("authUser", JSON.stringify(res.data));
+      const isNowFavorite = res.data.favorites.some(fav => fav.item === itemId);
+      toast.success(isNowFavorite ? "Added to favorites!" : "Removed from favorites.");
+    } catch (error) {
+      console.error("Failed to toggle favorite:", error);
+      toast.error("Could not update favorites.");
     }
   };
 
-  const logout = () => {
-    setAuthUser(null);
-    setToken(null);
-    localStorage.removeItem("authUser");
-    localStorage.removeItem("authToken");
-    delete axios.defaults.headers.common["Authorization"];
-  };
-
-  // <-- 3. Conditionally render a loader or the app
   if (loading) {
     return <FullPageLoader />;
   }
 
   return (
-    <AuthContext.Provider value={{ authUser, token, loading, login, logout, isAdmin: authUser?.role === "admin" }}>
+    <AuthContext.Provider value={{ authUser, token, loading, login, logout, isAdmin: authUser?.role === "admin", isFavorite, toggleFavorite }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const userAuth = () => useContext(AuthContext);
-
 export default AuthProvider;
