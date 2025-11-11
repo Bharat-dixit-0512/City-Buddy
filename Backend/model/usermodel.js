@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
+const { Schema } = mongoose;
 
-const userSchema = mongoose.Schema(
+const userSchema = new Schema(
   {
     username: {
       type: String,
-      required: true, 
+      required: true,
     },
     email: {
       type: String,
@@ -20,10 +21,17 @@ const userSchema = mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    favorites: [
+      {
+        item: { type: Schema.Types.ObjectId, required: true },
+        itemType: { type: String, required: true, enum: ["Attraction", "Cafe", "Restaurant"] },
+      },
+    ],
   },
-  { timestamps: true } 
+  { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
+userSchema.index({ "favorites.item": 1 });
 
+const User = mongoose.model("User", userSchema);
 export default User;

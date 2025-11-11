@@ -1,16 +1,16 @@
 import mongoose from "mongoose";
 
 const restaurantSchema = new mongoose.Schema({
-  id: Number,
-  name: String,
-  city: String,
-  area: String,
-  pincode: String,
-  description: String,
+  name: { type: String, required: true },
+  city: { type: String, required: true },
+  area: { type: String, required: true },
+  pincode: { type: String, required: true },
+  description: { type: String, required: true },
   image: String,
-  rating: Number,
+  rating: { type: Number, default: 0 },
+  reviewCount: { type: Number, default: 0 },
+  tags: [String],
 });
 
 const Restaurant = mongoose.model("Restaurant", restaurantSchema);
-
 export default Restaurant;
