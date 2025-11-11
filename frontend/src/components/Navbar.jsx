@@ -25,15 +25,20 @@ const Navbar = () => {
   return (
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ease-in-out ${
-        isSticky ? "bg-cyan-50 shadow-md" : "bg-white shadow-sm"
+        isSticky
+          ? "bg-[#023047] shadow-lg shadow-cyan-500/10"
+          : "bg-[#023047]"
       }`}
       aria-label="Main Navigation"
     >
       <nav className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-6 md:px-10 py-4 gap-4 md:gap-8">
         <Link to="/" className="flex items-center gap-2" aria-label="Home">
-          <MdOutlineLocationOn size={28} className="text-indigo-600" />
-          <span className="text-xl md:text-2xl font-bold font-serif text-gray-900 hover:scale-105">
-            City Buddy
+          <MdOutlineLocationOn
+            size={28}
+            className="text-[#FFD60A]"
+          />
+          <span className="text-xl md:text-2xl font-bold font-serif text-[#F9FAFB] hover:scale-105 hover:text-[#FFD60A] transition-all duration-300 [text-shadow:_0_0_8px_theme(colors.yellow.500)]">
+            City <span className="animate-pulse text-[#FFD60A]">Buddy</span>
           </span>
         </Link>
 
@@ -45,8 +50,8 @@ const Navbar = () => {
                 className={({ isActive }) =>
                   `px-5 py-2 text-sm md:text-base rounded-full font-medium transition-all duration-300 ${
                     isActive
-                      ? "bg-indigo-600 text-white shadow-md"
-                      : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-200"
+                      ? "bg-[#FF7B54] text-white shadow-md shadow-[#FF7B54]/40"
+                      : "bg-transparent border border-[#0077B6] text-[#F9FAFB] hover:bg-[#0077B6] hover:text-white hover:shadow-lg hover:shadow-[#0077B6]/40"
                   }`
                 }
                 aria-label={`Navigate to ${item}`}
@@ -61,20 +66,27 @@ const Navbar = () => {
           <button
             type="button"
             aria-label="Favorites"
-            className="text-gray-700 hover:text-red-500 transition-colors cursor-pointer"
+            className="text-[#FF7B54] hover:text-[#E85D04] transition-colors cursor-pointer"
           >
-            <CiHeart size={38} />
+            <CiHeart size={38} className="hover:animate-ping" />
           </button>
 
           {authUser ? (
             <>
-              <span className="text-gray-800 font-medium">Hi, {authUser.username}</span>
+              <span className="text-[#F9FAFB] font-medium">
+                Hi, {authUser.username}
+              </span>
               {isAdmin && (
-                <NavLink to="/admin" className="ml-3 px-3 py-1 bg-yellow-400 text-gray-900 rounded hover:brightness-95">Admin</NavLink>
+                <NavLink
+                  to="/admin"
+                  className="ml-3 px-3 py-1 bg-[#FFD60A] text-[#023047] rounded hover:brightness-110 font-semibold [text-shadow:_0_0_1px_black]"
+                >
+                  Admin
+                </NavLink>
               )}
               <button
                 onClick={handleLogout}
-                className="ml-2 px-3 py-1 bg-red-600 text-white rounded hover:bg-red-500 active:bg-red-600 transition cursor-pointer"
+                className="ml-2 px-3 py-1 bg-[#0077B6] text-white rounded hover:bg-[#023E8A] active:bg-[#023E8A] transition cursor-pointer"
               >
                 Logout
               </button>
@@ -84,6 +96,7 @@ const Navbar = () => {
               <lord-icon
                 src="https://cdn.lordicon.com/cniwvohj.json"
                 trigger="hover"
+                colors="primary:#FF7B54,secondary:#FFD60A"
                 className="w-8 h-8 md:w-9 md:h-9"
               ></lord-icon>
             </Link>

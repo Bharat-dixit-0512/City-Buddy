@@ -1,51 +1,50 @@
 import React from "react";
+import { MapPin, LocateFixed } from "lucide-react"; // Using icons for a cleaner look
 
 const Cards = ({ item }) => {
   return (
-    <div className="mt-10 mx-auto max-w-sm bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden transform hover:scale-102 cursor-pointer border border-gray-100">
-      <a href="#" className="block">
+    <div className="h-full bg-[#FFFFFF] rounded-3xl shadow-lg hover:shadow-xl border border-[#E9ECEF] transition-all duration-300 overflow-hidden transform hover:scale-105 cursor-pointer flex flex-col">
+      {/* Image Container */}
+      <div className="relative">
         <img
-          className="w-full h-52 object-cover rounded-t-3xl" // Increased height and rounded top
-          src={item.image || "https://via.placeholder.com/400x200?text=No+Image"} // Placeholder for missing images
+          className="w-full h-52 object-cover"
+          src={item.image || "https://via.placeholder.com/400x220?text=No+Image"}
           alt={`${item.name} Image`}
         />
-      </a>
+        {/* Optional: Highlight Tag using Golden Yellow */}
+        {/* <div className="absolute top-3 right-3 bg-[#FFD60A] text-[#212529] text-xs font-bold px-3 py-1 rounded-full shadow-md">
+          Best Deal
+        </div> */}
+      </div>
 
-      <div className="p-6 space-y-4"> {/* Increased padding and spacing */}
-        <a href="#" className="block">
-          <h2 className="text-2xl font-extrabold text-indigo-800 hover:text-indigo-600 transition duration-200">
-            {item.name}
-          </h2>
-        </a>
+      {/* Content Container */}
+      <div className="p-5 flex flex-col flex-grow">
+        <h2 className="text-2xl font-extrabold text-[#212529] hover:text-[#FF7B54] transition duration-200 truncate">
+          {item.name}
+        </h2>
 
-        <div className="flex justify-between items-center text-sm text-gray-500 font-medium">
-          <span className="flex items-center gap-1">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
+        {/* Location Info */}
+        <div className="flex justify-between items-center text-sm text-[#495057] font-medium mt-2">
+          <span className="flex items-center gap-1.5">
+            <MapPin size={14} className="text-[#0077B6]/70" />
             {item.city}
           </span>
-          <span className="flex items-center gap-1">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 13a2 2 0 100-4 2 2 0 000 4z" />
-            </svg>
+          <span className="flex items-center gap-1.5">
+            <LocateFixed size={14} className="text-[#0077B6]/70" />
             {item.pincode}
           </span>
         </div>
 
-        <p className="text-gray-700 text-base leading-relaxed line-clamp-3"> {/* Added line-clamp for description */}
+        {/* Description */}
+        <p className="text-[#495057] text-sm leading-relaxed line-clamp-3 my-4 flex-grow">
           {item.description}
         </p>
 
-        <p className="text-base font-semibold text-gray-800 flex items-center gap-1">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 13a2 2 0 100-4 2 2 0 000 4z" />
-          </svg>
-          Area: <span className="text-indigo-600 font-bold">{item.area}</span>
-        </p>
+        {/* Area Info */}
+        <div className="text-base font-semibold text-[#212529] flex items-center gap-2 mt-auto pt-3 border-t border-[#E9ECEF]">
+          <MapPin size={16} className="text-[#FF7B54]" />
+          Area: <span className="text-[#0077B6] font-bold">{item.area}</span>
+        </div>
       </div>
     </div>
   );
