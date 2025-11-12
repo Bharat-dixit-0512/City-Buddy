@@ -49,7 +49,7 @@ const Home = () => {
             Discover trusted stays, charming cafés, and must-see attractions—
             CityBuddy curates your perfect journey.
           </p>
-          <NavLink to="/all">
+          <NavLink to="/restaurants">
             <button className="cursor-pointer bg-[#FF7B54] hover:bg-[#E85D04] text-white font-semibold py-3 px-8 rounded-full shadow-[0_0_15px_rgba(255,123,84,0.5),0_0_30px_rgba(255,123,84,0.4)] hover:shadow-[0_0_20px_rgba(255,123,84,0.7),0_0_40px_rgba(255,123,84,0.6)] transition-all duration-300">
               Start Exploring
             </button>

@@ -12,6 +12,7 @@ import CategoryPage from "./pages/CategoryPage";
 import SearchResults from "./pages/SearchResults";
 import Favorites from "./pages/Favorites";
 import MapView from "./pages/MapView";
+import Profile from "./pages/Profile"; // Import the new profile page
 import ScrollToTop from "./components/motion/ScrollToTop";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -80,6 +81,14 @@ function App() {
         {
           path: "/map",
           element: <ProtectedRoute><MapView /></ProtectedRoute>,
+        },
+        {
+          path: "/profile", // <-- HERE IS THE NEW PROFILE ROUTE
+          element: (
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/admin",

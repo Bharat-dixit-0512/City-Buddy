@@ -44,7 +44,7 @@ const Footer = () => {
         &copy; {new Date().getFullYear()} <span className="font-semibold text-[#FFD60A]">CityBuddy</span> | All Rights Reserved
       </div>
       {isVisible && (
-        <button onClick={scrollToTop} className="fixed bottom-6 right-6 bg-[#FF7B54] text-white p-3 rounded-full shadow-lg" aria-label="Back to top">
+        <button onClick={scrollToTop} className="cursor-pointer fixed bottom-6 right-6 bg-[#FF7B54] text-white p-3 rounded-full shadow-lg" aria-label="Back to top">
           <ChevronUp size={22} />
         </button>
       )}

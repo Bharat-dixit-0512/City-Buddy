@@ -121,7 +121,7 @@ const AdminDashboard = () => {
                     </div>
                     <div>
                         <label className="block text-sm font-medium">Price Category</label>
-                        <select name="priceCategory" value={formData.priceCategory} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-lg bg-white"><option value="Budget">Budget</option><option value="Mid-Range">Mid-Range</option><option value="Luxury">Luxury</option></select>
+                        <select name="priceCategory" value={formData.priceCategory} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-lg bg-white cursor-pointer"><option value="Budget">Budget</option><option value="Mid-Range">Mid-Range</option><option value="Luxury">Luxury</option></select>
                     </div>
                 </>
               )}
@@ -138,15 +138,15 @@ const AdminDashboard = () => {
                 <textarea name="description" value={formData.description} onChange={handleInputChange} required rows={4} className="w-full px-3 py-2 border rounded-lg" />
               </div>
               <div className="flex gap-4">
-                <button type="submit" disabled={loading} className="px-6 py-2 bg-[#FF7B54] text-white rounded-lg w-full">{loading ? "Saving..." : isEditing ? "Update" : "Add"}</button>
-                {isEditing && <button type="button" onClick={() => resetForm()} className="px-6 py-2 bg-gray-300 rounded-lg w-full">Cancel</button>}
+                <button type="submit" disabled={loading} className="px-6 py-2 bg-[#FF7B54] text-white rounded-lg w-full cursor-pointer disabled:bg-opacity-50 disabled:cursor-not-allowed">{loading ? "Saving..." : isEditing ? "Update" : "Add"}</button>
+                {isEditing && <button type="button" onClick={() => resetForm()} className="px-6 py-2 bg-gray-300 rounded-lg w-full cursor-pointer">Cancel</button>}
               </div>
             </form>
           </div>
           <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-lg border">
             <div className="flex gap-2 mb-4 border-b flex-wrap">
               {tabs.map((tab) => (
-                <button key={tab.id} onClick={() => handleTabClick(tab.id)} className={`px-4 py-2 font-medium ${activeTab === tab.id ? "border-b-2 border-[#FF7B54] text-[#FF7B54]" : "text-gray-600"}`}>{tab.label}</button>
+                <button key={tab.id} onClick={() => handleTabClick(tab.id)} className={`px-4 py-2 font-medium cursor-pointer ${activeTab === tab.id ? "border-b-2 border-[#FF7B54] text-[#FF7B54]" : "text-gray-600"}`}>{tab.label}</button>
               ))}
             </div>
             {loading ? <Spinner /> : (
@@ -155,8 +155,8 @@ const AdminDashboard = () => {
                   <div key={item._id} className="flex justify-between items-center p-3 border rounded-lg">
                     <span>{item.name} - <span className="text-sm text-gray-500">{item.city}</span></span>
                     <div className="flex gap-3">
-                      <button onClick={() => handleEdit(item)}><Edit size={18} className="text-blue-500" /></button>
-                      <button onClick={() => handleDelete(item._id)}><Trash2 size={18} className="text-red-500" /></button>
+                      <button onClick={() => handleEdit(item)} className="cursor-pointer"><Edit size={18} className="text-blue-500" /></button>
+                      <button onClick={() => handleDelete(item._id)} className="cursor-pointer"><Trash2 size={18} className="text-red-500" /></button>
                     </div>
                   </div>
                 )) : <p>No {activeTab}s found.</p>}
