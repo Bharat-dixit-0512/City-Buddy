@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom'; // <-- 1. Import ReactDOM
+import ReactDOM from 'react-dom';
 import { X, Star, MapPin, Heart, Wallet, BedDouble } from 'lucide-react';
 import Reviews from './Reviews';
 import { userAuth } from '../context/AuthProvider';
@@ -9,7 +9,6 @@ const DetailsModal = ({ item, onClose }) => {
 
   if (!item) return null;
 
-  // 2. This is the JSX for our modal. We'll pass this to the portal.
   const modalContent = (
     <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
       <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full relative max-h-[90vh] grid grid-cols-1 lg:grid-cols-2">
@@ -20,8 +19,8 @@ const DetailsModal = ({ item, onClose }) => {
         <div className="relative h-full min-h-[300px] lg:min-h-0">
           <img src={item.image || "https://via.placeholder.com/600x800"} alt={item.name} className="absolute w-full h-full object-cover rounded-t-2xl lg:rounded-l-2xl lg:rounded-tr-none" />
           {authUser && (
-             <button onClick={() => toggleFavorite(item._id, item.category)} className="absolute top-4 left-4 bg-white p-2 rounded-full shadow-md z-10">
-                <Heart size={20} className={isFavorite(item._id) ? "text-red-500 fill-current" : "text-gray-600"} />
+             <button onClick={() => toggleFavorite(item._id)} className="absolute top-4 left-4 bg-white p-2 rounded-full shadow-md z-10">
+                <Heart size={20} className={isFavorite(item._id) ? "text-red-500 fill-current cursor-pointer" : "cursor-pointer text-gray-600"} />
             </button>
           )}
         </div>
@@ -70,7 +69,6 @@ const DetailsModal = ({ item, onClose }) => {
     </div>
   );
 
-  // 3. Render the modalContent into the '#modal-root' div from index.html
   return ReactDOM.createPortal(
     modalContent,
     document.getElementById('modal-root')

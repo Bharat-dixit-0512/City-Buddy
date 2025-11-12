@@ -100,6 +100,7 @@ export const toggleFavorite = async (req, res) => {
   }
 };
 
+// THIS IS THE MISSING FUNCTION THAT HAS BEEN ADDED BACK
 export const getFavorites = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).populate({
@@ -108,7 +109,37 @@ export const getFavorites = async (req, res) => {
     });
     const validFavorites = user.favorites.map(fav => fav.item).filter(Boolean);
     res.status(200).json(validFavorites);
-  } catch (error) { // <-- This is the corrected line
+  } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const updatePassword = async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const userId = req.user.id;
+
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ message: "Please provide both current and new passwords." });
+  }
+
+  try {
+    const user = await User.findById(userId).select('+password');
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Incorrect current password." });
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedNewPassword;
+    await user.save();
+
+    res.status(200).json({ message: "Password updated successfully." });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error, please try again later.", error: error.message });
   }
 };

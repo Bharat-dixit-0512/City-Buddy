@@ -23,8 +23,8 @@ const userSchema = new Schema(
     },
     favorites: [
       {
-        item: { type: Schema.Types.ObjectId, required: true },
-        itemType: { type: String, required: true, enum: ["Attraction", "Cafe", "Restaurant"] },
+        item: { type: Schema.Types.ObjectId, required: true, ref: 'Place' },
+        _id: false // <-- ADD THIS LINE to prevent unnecessary sub-document IDs
       },
     ],
   },

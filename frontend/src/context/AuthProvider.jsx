@@ -34,6 +34,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    // --- THIS LINE IS NOW CORRECTED ---
     const initializeAuth = async () => {
       if (token) {
         configureAxios(token);
@@ -59,19 +60,19 @@ const AuthProvider = ({ children }) => {
   };
 
   const isFavorite = (itemId) => {
-    return authUser?.favorites?.some((fav) => fav.item === itemId);
+    return authUser?.favorites?.some((fav) => fav.item.toString() === itemId);
   };
 
-  const toggleFavorite = async (itemId, itemType) => {
+  const toggleFavorite = async (itemId) => {
     if (!authUser) {
       toast.error("You must be logged in to add favorites.");
       return;
     }
     try {
-      const res = await axios.post(`${API_BASE}/user/favorites/${itemType}/${itemId}`);
+      const res = await axios.post(`${API_BASE}/user/favorites/${itemId}`);
       setAuthUser(res.data);
       localStorage.setItem("authUser", JSON.stringify(res.data));
-      const isNowFavorite = res.data.favorites.some(fav => fav.item === itemId);
+      const isNowFavorite = res.data.favorites.some(fav => fav.item.toString() === itemId);
       toast.success(isNowFavorite ? "Added to favorites!" : "Removed from favorites.");
     } catch (error) {
       console.error("Failed to toggle favorite:", error);

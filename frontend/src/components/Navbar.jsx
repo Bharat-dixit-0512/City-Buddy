@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Heart, Map } from "lucide-react";
+import { Heart, Map, User } from "lucide-react"; // Import the User icon
 import { MdOutlineLocationOn } from "react-icons/md";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { userAuth } from "../context/AuthProvider";
@@ -21,7 +21,7 @@ const Navbar = () => {
     navigate("/login");
   };
 
-  const navItems = ["Restaurants", "Hotels", "Guesthouses", "Cafes", "Attractions"];
+  const navItems = ["Restaurants", "Hotels", "Guest Houses", "Cafes", "Attractions"];
 
   return (
     <header className={`sticky top-0 z-50 transition-all duration-300 ease-in-out ${isSticky ? "bg-[#023047] shadow-lg shadow-cyan-500/10" : "bg-[#023047]"}`} >
@@ -44,9 +44,15 @@ const Navbar = () => {
         <div className="flex items-center gap-4 order-2 md:order-3">
           <div className="w-48 hidden lg:block"><Searchbar /></div>
           <NavLink to="/map" className="text-[#F9FAFB] hover:text-[#FFD60A]"><Map size={24} /></NavLink>
-          <NavLink to="/favorites" className="text-[#F9FAFB] hover:text-[#FF7B54]"><Heart size={24} /></NavLink>
           {authUser ? (
             <>
+              <NavLink to="/favorites" className="text-[#F9FAFB] hover:text-[#FF7B54]"><Heart size={24} /></NavLink>
+              
+              {/* HERE IS THE NEW PROFILE LINK/ICON */}
+              <NavLink to="/profile" title="Profile" className="text-[#F9FAFB] hover:text-[#FFD60A]">
+                 <User size={24} />
+              </NavLink>
+              
               {isAdmin && (
                 <NavLink to="/admin" className="px-3 py-1 bg-[#FFD60A] text-[#023047] rounded hover:brightness-110 font-semibold">Admin</NavLink>
               )}

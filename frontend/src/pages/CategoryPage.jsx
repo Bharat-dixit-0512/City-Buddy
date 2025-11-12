@@ -33,7 +33,7 @@ function CategoryPage({ category, title, description }) {
   return (
     <div className="min-h-screen bg-[#F9FAFB] px-4 md:px-10 py-12">
       <div className="text-center mb-10 pt-8">
-        <h1 className="text-4xl md:text-5xl font-bold">{title}</h1>
+        <h1 className="text-4xl md:text-5xl font-bold hover:text-[#FF7B54] cursor-pointer">{title}</h1>
         <p className="text-lg mt-2 text-gray-600">{description}</p>
       </div>
       {loading ? (
