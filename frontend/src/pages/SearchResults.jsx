@@ -10,7 +10,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4001";
 const SearchResults = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q');
-  const [results, setResults] = useState({ attractions: [], cafes: [], restaurants: [] });
+  const [results, setResults] = useState({ restaurants: [], cafes: [], attractions: [], hotels: [], guesthouses: [] });
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
 
@@ -20,14 +20,20 @@ const SearchResults = () => {
       setLoading(true);
       try {
         const res = await axios.get(`${API_BASE}/search?q=${query}`);
+        const allResults = res.data; // This is the flat array from the backend
+
         const formattedResults = {
-            attractions: res.data.attractions.map(item => ({ ...item, itemType: 'Attraction' })),
-            cafes: res.data.cafes.map(item => ({ ...item, itemType: 'Cafe' })),
-            restaurants: res.data.restaurants.map(item => ({ ...item, itemType: 'Restaurant' })),
+            restaurants: allResults.filter(item => item.category === 'Restaurant'),
+            cafes: allResults.filter(item => item.category === 'Cafe'),
+            attractions: allResults.filter(item => item.category === 'Attraction'),
+            hotels: allResults.filter(item => item.category === 'Hotel'),
+            guesthouses: allResults.filter(item => item.category === 'Guesthouse'),
         };
+        
         setResults(formattedResults);
       } catch (error) {
         console.error('Search failed', error);
+        toast.error("Search failed. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -37,6 +43,8 @@ const SearchResults = () => {
 
   const sections = [
     { title: "Restaurants", data: results.restaurants },
+    { title: "Hotels", data: results.hotels },
+    { title: "Guesthouses", data: results.guesthouses },
     { title: "Cafes", data: results.cafes },
     { title: "Attractions", data: results.attractions },
   ];
@@ -63,7 +71,7 @@ const SearchResults = () => {
           ))}
         </div>
       ) : (
-        <p className="text-center text-gray-500">No results found for your search.</p>
+        <p className="text-center text-gray-500 text-lg py-10">No results found for your search.</p>
       )}
       {selectedItem && <DetailsModal item={selectedItem} onClose={() => setSelectedItem(null)} />}
     </div>
