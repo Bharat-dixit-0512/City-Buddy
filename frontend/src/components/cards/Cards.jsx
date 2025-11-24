@@ -7,16 +7,19 @@ const Cards = ({ item, onItemClick }) => {
 
   const handleFavoriteClick = (e) => {
     e.stopPropagation();
-    toggleFavorite(item._id); 
+    toggleFavorite(item._id);
   };
 
   return (
-    <div className="h-full bg-white rounded-2xl shadow-lg hover:shadow-xl border transition-all duration-300 overflow-hidden transform hover:-translate-y-1" onClick={() => onItemClick(item)}>
+    <div 
+      className="h-full bg-white rounded-2xl shadow-lg hover:shadow-xl border transition-all duration-300 overflow-hidden transform hover:-translate-y-1 cursor-pointer" 
+      onClick={() => onItemClick(item)}
+    >
       <div className="relative">
         <img className="w-full h-52 object-cover" src={item.image || "https://via.placeholder.com/400x220"} alt={item.name} />
         {authUser && (
           <button onClick={handleFavoriteClick} className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md">
-            <Heart size={20} className={isFavorite(item._id) ? "text-red-500 cursor-pointer fill-current" : "cursor-pointer text-gray-600"} />
+            <Heart size={20} className={isFavorite(item._id) ? "text-red-500 fill-current" : "text-gray-600"} />
           </button>
         )}
       </div>

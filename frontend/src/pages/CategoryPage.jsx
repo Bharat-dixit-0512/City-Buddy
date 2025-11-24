@@ -19,9 +19,7 @@ function CategoryPage({ category, title, description }) {
     const fetchItems = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(
-          `${API_BASE}/places?category=${category}&page=${page}&sort=${sort}`
-        );
+        const res = await axios.get(`${API_BASE}/places?category=${category}&page=${page}&sort=${sort}`);
         setItems(res.data.data || []);
         setPages(res.data.pages);
       } catch (error) {
@@ -32,18 +30,18 @@ function CategoryPage({ category, title, description }) {
     };
     fetchItems();
   }, [category, page, sort]);
-
+  
   const sortOptions = [
-    { label: "Highest Rated", value: "-rating" },
-    { label: "Price (Low to High)", value: "priceForTwo" },
-    { label: "Price (High to Low)", value: "-priceForTwo" },
+      { label: "Highest Rated", value: "-rating" },
+      { label: "Price (Low to High)", value: "priceForTwo" },
+      { label: "Price (High to Low)", value: "-priceForTwo" }
   ];
-
+  
   if (category === "Hotel" || category === "Guesthouse") {
-    sortOptions[1] = { label: "Price (Low to High)", value: "pricePerNight" };
-    sortOptions[2] = { label: "Price (High to Low)", value: "-pricePerNight" };
+      sortOptions[1] = { label: "Price (Low to High)", value: "pricePerNight" };
+      sortOptions[2] = { label: "Price (High to Low)", value: "-pricePerNight" };
   } else if (category === "Attraction") {
-    sortOptions.splice(1, 2);
+      sortOptions.splice(1, 2);
   }
 
   return (
@@ -53,16 +51,8 @@ function CategoryPage({ category, title, description }) {
         <p className="text-lg mt-2 text-gray-600">{description}</p>
       </div>
       <div className="max-w-7xl mx-auto flex justify-end mb-4">
-        <select
-          value={sort}
-          onChange={(e) => setSort(e.target.value)}
-          className="bg-white border border-gray-300 rounded-md px-3 py-2 cursor-pointer"
-        >
-          {sortOptions.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
+        <select value={sort} onChange={(e) => setSort(e.target.value)} className="bg-white border border-gray-300 rounded-md px-3 py-2 cursor-pointer">
+            {sortOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
         </select>
       </div>
       {loading ? (
@@ -70,23 +60,14 @@ function CategoryPage({ category, title, description }) {
       ) : items.length > 0 ? (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {items.map((item) => (
-              <Cards key={item._id} item={item} onItemClick={setSelectedItem} />
-            ))}
+            {items.map((item) => <Cards key={item._id} item={item} onItemClick={setSelectedItem} />)}
           </div>
           <Pagination page={page} pages={pages} onPageChange={setPage} />
         </>
       ) : (
-        <p className="text-center text-gray-500 py-16">
-          No {title.toLowerCase()} found.
-        </p>
+        <p className="text-center text-gray-500 py-16">No {title.toLowerCase()} found.</p>
       )}
-      {selectedItem && (
-        <DetailsModal
-          item={selectedItem}
-          onClose={() => setSelectedItem(null)}
-        />
-      )}
+      {selectedItem && <DetailsModal item={selectedItem} onClose={() => setSelectedItem(null)} />}
     </div>
   );
 }
