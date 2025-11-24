@@ -4,10 +4,10 @@ import User from "../model/usermodel.js";
 import mongoose from "mongoose";
 
 const awardBadge = async (user, badgeName) => {
-  if (!user.badges.includes(badgeName)) {
-    user.badges.push(badgeName);
-    user.points += 50;
-  }
+    if (!user.badges.includes(badgeName)) {
+        user.badges.push(badgeName);
+        user.points += 50;
+    }
 };
 
 export const createReview = async (req, res) => {
@@ -19,15 +19,11 @@ export const createReview = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
-    const existingReview = await Review.findOne({ user: userId, item }).session(
-      session
-    );
+    const existingReview = await Review.findOne({ user: userId, item }).session(session);
     if (existingReview) {
       await session.abortTransaction();
       session.endSession();
-      return res
-        .status(409)
-        .json({ message: "You have already reviewed this item." });
+      return res.status(409).json({ message: "You have already reviewed this item." });
     }
     const place = await Place.findById(item).session(session);
     if (!place) {
@@ -35,29 +31,17 @@ export const createReview = async (req, res) => {
       session.endSession();
       return res.status(404).json({ message: "Place not found." });
     }
-    const newReview = new Review({
-      user: userId,
-      item,
-      rating,
-      comment,
-      itemType: place.category,
-    });
+    const newReview = new Review({ user: userId, item, rating, comment, itemType: place.category });
     await newReview.save({ session });
     const reviews = await Review.find({ item }).session(session);
     const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
     const newAverageRating = totalRating / reviews.length;
-    await Place.findByIdAndUpdate(
-      item,
-      { rating: newAverageRating.toFixed(2), reviewCount: reviews.length },
-      { session }
-    );
+    await Place.findByIdAndUpdate(item, { rating: newAverageRating.toFixed(2), reviewCount: reviews.length }, { session });
     const user = await User.findById(userId).session(session);
     user.points += 10;
-    const userReviewsCount = await Review.countDocuments({
-      user: userId,
-    }).session(session);
-    if (userReviewsCount === 1) await awardBadge(user, "First Review");
-    if (userReviewsCount >= 10) await awardBadge(user, "Top Contributor");
+    const userReviewsCount = await Review.countDocuments({ user: userId }).session(session);
+    if (userReviewsCount === 1) await awardBadge(user, 'First Review');
+    if (userReviewsCount >= 10) await awardBadge(user, 'Top Contributor');
     await user.save({ session });
     await session.commitTransaction();
     session.endSession();
@@ -72,29 +56,12 @@ export const createReview = async (req, res) => {
 
 export const getReviewsForItem = async (req, res) => {
   const { itemId } = req.params;
-  const { sort = "-createdAt" } = req.query;
-  let sortOption = {};
-  if (sort === "helpful") {
-    sortOption = { helpfulVotesCount: -1 };
-  } else {
-    sortOption = { createdAt: -1 };
-  }
+  const { sort = '-createdAt' } = req.query;
   try {
-    const reviews = await Review.aggregate([
-      { $match: { item: new mongoose.Types.ObjectId(itemId) } },
-      { $addFields: { helpfulVotesCount: { $size: "$helpfulVotes" } } },
-      { $sort: sortOption },
-      {
-        $lookup: {
-          from: "users",
-          localField: "user",
-          foreignField: "_id",
-          as: "user",
-        },
-      },
-      { $unwind: "$user" },
-      { $project: { "user.password": 0, "user.email": 0 } },
-    ]);
+    let reviews = await Review.find({ item: itemId }).populate('user', 'username').populate('reply.user', 'username').sort({ createdAt: -1 });
+    if (sort === 'helpful') {
+      reviews.sort((a, b) => b.helpfulVotes.length - a.helpfulVotes.length);
+    }
     res.status(200).json(reviews);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -102,48 +69,46 @@ export const getReviewsForItem = async (req, res) => {
 };
 
 export const toggleHelpfulVote = async (req, res) => {
-  const { reviewId } = req.params;
-  const userId = req.user.id;
-  try {
-    const review = await Review.findById(reviewId);
-    if (!review) return res.status(404).json({ message: "Review not found." });
-    const voteIndex = review.helpfulVotes.indexOf(userId);
-    const user = await User.findById(review.user);
-    if (voteIndex > -1) {
-      review.helpfulVotes.splice(voteIndex, 1);
-      if (user) user.points -= 2;
-    } else {
-      review.helpfulVotes.push(userId);
-      if (user) user.points += 2;
+    const { reviewId } = req.params;
+    const userId = req.user.id;
+    try {
+        const review = await Review.findById(reviewId);
+        if (!review) return res.status(404).json({ message: 'Review not found.' });
+        const voteIndex = review.helpfulVotes.indexOf(userId);
+        const user = await User.findById(review.user);
+        if (voteIndex > -1) {
+            review.helpfulVotes.splice(voteIndex, 1);
+            if (user) user.points -= 2;
+        } else {
+            review.helpfulVotes.push(userId);
+            if (user) user.points += 2;
+        }
+        await review.save();
+        if (user) {
+            if (review.helpfulVotes.length >= 10) await awardBadge(user, 'Tastemaker');
+            await user.save();
+        }
+        res.status(200).json(review);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-    await review.save();
-    if (user) {
-      if (review.helpfulVotes.length >= 10)
-        await awardBadge(user, "Tastemaker");
-      await user.save();
-    }
-    res.status(200).json(review);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
 };
 
 export const replyToReview = async (req, res) => {
-  const { reviewId } = req.params;
-  const { comment } = req.body;
-  const userId = req.user.id;
-  try {
-    const review = await Review.findById(reviewId).populate("item");
-    if (!review) return res.status(404).json({ message: "Review not found." });
-    if (review.item.claimedBy?.toString() !== userId) {
-      return res
-        .status(403)
-        .json({ message: "Only the owner of this place can reply." });
+    const { reviewId } = req.params;
+    const { comment } = req.body;
+    const userId = req.user.id;
+    try {
+        const review = await Review.findById(reviewId).populate('item');
+        if (!review) return res.status(404).json({ message: 'Review not found.' });
+        if (review.item.claimedBy?.toString() !== userId) {
+            return res.status(403).json({ message: 'Only the owner of this place can reply.' });
+        }
+        review.reply = { user: userId, comment };
+        await review.save();
+        const populatedReview = await review.populate('reply.user', 'username');
+        res.status(200).json(populatedReview);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-    review.reply = { user: userId, comment };
-    await review.save();
-    res.status(200).json(review);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
 };

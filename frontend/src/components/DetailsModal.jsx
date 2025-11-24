@@ -17,7 +17,7 @@ const DetailsModal = ({ item, onClose }) => {
   const { register: registerClaim, handleSubmit: handleSubmitClaim, reset: resetClaim } = useForm();
 
   if (!item) return null;
-
+  
   const hasCoordinates = item.location?.coordinates?.length >= 2;
   const getDirectionsUrl = hasCoordinates ? `https://www.google.com/maps?q=${item.location.coordinates[1]},${item.location.coordinates[0]}` : null;
 
@@ -34,7 +34,7 @@ const DetailsModal = ({ item, onClose }) => {
 
   const onClaimSubmit = async (data) => {
     try {
-        await axios.post(`${API_BASE}/admin/claims`, { placeId: item._id, message: data.message });
+        await axios.post(`${API_BASE}/claims`, { placeId: item._id, message: data.message });
         toast.success("Your claim request has been submitted for review.");
         setShowClaimForm(false);
         resetClaim();

@@ -8,6 +8,7 @@ import reviewRouter from "./Route/review.route.js";
 import searchRouter from "./Route/search.route.js";
 import adminRouter from "./Route/admin.route.js";
 import homeRouter from "./Route/home.route.js";
+import claimRouter from "./Route/claim.route.js";
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use("/reviews", reviewRouter);
 app.use("/search", searchRouter);
 app.use("/admin", adminRouter);
 app.use("/home", homeRouter);
+app.use("/claims", claimRouter);
 
 app.get("/health", async (req, res) => {
   try {
@@ -44,12 +46,7 @@ app.get("/health", async (req, res) => {
 
 app.use((err, req, res, next) => {
   console.error("Unhandled route error:", err && err.stack ? err.stack : err);
-  res
-    .status(500)
-    .json({
-      message: "Internal Server Error",
-      error: err?.message || String(err),
-    });
+  res.status(500).json({ message: "Internal Server Error", error: err?.message || String(err) });
 });
 
 process.on("unhandledRejection", (reason, promise) => {
@@ -66,7 +63,7 @@ if (URI) {
     .then(() => console.log("Connection Successful with MongoDB 😁"))
     .catch((error) => console.error("❌ MongoDB Connection Error:", error));
 } else {
-  console.log("⚠️  MongoDB URI not found.");
+  console.log("⚠️  MongoDB URI not found in .env file.");
 }
 
 app.listen(port, () => {
