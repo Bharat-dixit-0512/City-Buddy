@@ -36,14 +36,16 @@ export const signup = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ message: "Internal Server Error", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
   }
 };
 
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email }).select("+password");
     if (!user) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
@@ -71,18 +73,18 @@ export const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
     if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
     res.status(200).json(user);
   } catch (error) {
-     res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 export const toggleFavorite = async (req, res) => {
   const { itemId } = req.params;
   const userId = req.user.id;
-  
+
   try {
     const user = await User.findById(userId);
     const favIndex = user.favorites.findIndex(
@@ -100,14 +102,15 @@ export const toggleFavorite = async (req, res) => {
   }
 };
 
-// THIS IS THE MISSING FUNCTION THAT HAS BEEN ADDED BACK
 export const getFavorites = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).populate({
-        path: 'favorites.item',
-        model: 'Place'
+      path: "favorites.item",
+      model: "Place",
     });
-    const validFavorites = user.favorites.map(fav => fav.item).filter(Boolean);
+    const validFavorites = user.favorites
+      .map((fav) => fav.item)
+      .filter(Boolean);
     res.status(200).json(validFavorites);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
@@ -119,11 +122,13 @@ export const updatePassword = async (req, res) => {
   const userId = req.user.id;
 
   if (!currentPassword || !newPassword) {
-    return res.status(400).json({ message: "Please provide both current and new passwords." });
+    return res
+      .status(400)
+      .json({ message: "Please provide both current and new passwords." });
   }
 
   try {
-    const user = await User.findById(userId).select('+password');
+    const user = await User.findById(userId).select("+password");
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
@@ -138,8 +143,32 @@ export const updatePassword = async (req, res) => {
     await user.save();
 
     res.status(200).json({ message: "Password updated successfully." });
-
   } catch (error) {
-    res.status(500).json({ message: "Server error, please try again later.", error: error.message });
+    res
+      .status(500)
+      .json({
+        message: "Server error, please try again later.",
+        error: error.message,
+      });
+  }
+};
+
+export const requestAdminAccess = async (req, res) => {
+  const userId = req.user.id;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+    if (user.role === "admin" || user.adminRequestStatus === "pending") {
+      return res.status(400).json({ message: "Invalid request." });
+    }
+    user.adminRequestStatus = "pending";
+    await user.save();
+    res
+      .status(200)
+      .json({ message: "Admin access request submitted successfully.", user });
+  } catch (error) {
+    res.status(500).json({ message: "Server error.", error: error.message });
   }
 };

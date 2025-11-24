@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -6,7 +12,16 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4001";
 const AuthContext = createContext();
 
 const FullPageLoader = () => (
-  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', fontSize: '1.5rem', color: '#4F46E5' }}>
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      height: "100vh",
+      fontSize: "1.5rem",
+      color: "#4F46E5",
+    }}
+  >
     Loading...
   </div>
 );
@@ -33,23 +48,31 @@ const AuthProvider = ({ children }) => {
     toast.success("Logged out successfully");
   }, []);
 
+  const refreshUser = useCallback(async () => {
+    if (token) {
+      try {
+        const res = await axios.get(`${API_BASE}/user/me`);
+        setAuthUser(res.data);
+        localStorage.setItem("authUser", JSON.stringify(res.data));
+        return res.data;
+      } catch (error) {
+        console.error("Session expired or invalid, logging out.", error);
+        logout();
+      }
+    }
+    return null;
+  }, [token, logout]);
+
   useEffect(() => {
-    // --- THIS LINE IS NOW CORRECTED ---
     const initializeAuth = async () => {
       if (token) {
         configureAxios(token);
-        try {
-          const res = await axios.get(`${API_BASE}/user/me`);
-          setAuthUser(res.data);
-        } catch (error) {
-          console.error("Session expired or invalid", error);
-          logout();
-        }
+        await refreshUser();
       }
       setLoading(false);
     };
     initializeAuth();
-  }, [token, logout]);
+  }, [token, refreshUser]);
 
   const login = (userData, jwtToken) => {
     setAuthUser(userData);
@@ -69,11 +92,9 @@ const AuthProvider = ({ children }) => {
       return;
     }
     try {
-      const res = await axios.post(`${API_BASE}/user/favorites/${itemId}`);
-      setAuthUser(res.data);
-      localStorage.setItem("authUser", JSON.stringify(res.data));
-      const isNowFavorite = res.data.favorites.some(fav => fav.item.toString() === itemId);
-      toast.success(isNowFavorite ? "Added to favorites!" : "Removed from favorites.");
+      await axios.post(`${API_BASE}/user/favorites/${itemId}`);
+      await refreshUser(); // This will fetch the latest user data including badges/points
+      toast.success("Favorites updated!");
     } catch (error) {
       console.error("Failed to toggle favorite:", error);
       toast.error("Could not update favorites.");
@@ -85,7 +106,21 @@ const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ authUser, token, loading, login, logout, isAdmin: authUser?.role === "admin", isFavorite, toggleFavorite }}>
+    <AuthContext.Provider
+      value={{
+        authUser,
+        token,
+        loading,
+        login,
+        logout,
+        refreshUser,
+        isAdmin: authUser?.role === "admin" || authUser?.role === "super-admin",
+        isSuperAdmin: authUser?.role === "super-admin",
+        isOwner: authUser?.role === "owner",
+        isFavorite,
+        toggleFavorite,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

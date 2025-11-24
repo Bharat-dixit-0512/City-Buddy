@@ -21,6 +21,16 @@ export const verifyToken = (req, res, next) => {
 
 export const requireAdmin = (req, res, next) => {
   if (!req.user) return res.status(401).json({ message: "Unauthorized" });
-  if (req.user.role !== "admin") return res.status(403).json({ message: "Admin access required" });
+  if (req.user.role !== "admin" && req.user.role !== "super-admin") {
+    return res.status(403).json({ message: "Admin access required" });
+  }
+  next();
+};
+
+export const requireSuperAdmin = (req, res, next) => {
+  if (!req.user) return res.status(401).json({ message: "Unauthorized" });
+  if (req.user.role !== "super-admin") {
+    return res.status(403).json({ message: "Super Admin access required" });
+  }
   next();
 };

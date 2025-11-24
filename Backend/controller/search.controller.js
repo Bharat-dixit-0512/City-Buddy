@@ -21,11 +21,12 @@ export const searchAll = async (req, res) => {
 
     const results = await Place.find(searchQuery).limit(20);
 
-    // We no longer need to separate them by category here, 
+    // We no longer need to separate them by category here,
     // the frontend can do that if needed, or just display a mixed list.
     res.status(200).json(results);
-
   } catch (error) {
-    res.status(500).json({ message: "Server error during search", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Server error during search", error: error.message });
   }
 };

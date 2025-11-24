@@ -1,4 +1,9 @@
-import { RouterProvider, createBrowserRouter, Outlet, Navigate } from "react-router-dom";
+import {
+  RouterProvider,
+  createBrowserRouter,
+  Outlet,
+  Navigate,
+} from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./components/Home";
 import Login from "./components/profile/Login";
@@ -12,7 +17,7 @@ import CategoryPage from "./pages/CategoryPage";
 import SearchResults from "./pages/SearchResults";
 import Favorites from "./pages/Favorites";
 import MapView from "./pages/MapView";
-import Profile from "./pages/Profile"; // Import the new profile page
+import Profile from "./pages/Profile";
 import ScrollToTop from "./components/motion/ScrollToTop";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -52,38 +57,90 @@ function App() {
         { path: "/signup", element: <Signup /> },
         {
           path: "/restaurants",
-          element: <ProtectedRoute><CategoryPage category="Restaurant" title="Restaurants" description="Discover top-rated restaurants." /></ProtectedRoute>,
+          element: (
+            <ProtectedRoute>
+              <CategoryPage
+                category="Restaurant"
+                title="Restaurants"
+                description="Discover top-rated restaurants."
+              />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/cafes",
-          element: <ProtectedRoute><CategoryPage category="Cafe" title="Cafes" description="Explore the best cafes for a perfect break." /></ProtectedRoute>,
+          element: (
+            <ProtectedRoute>
+              <CategoryPage
+                category="Cafe"
+                title="Cafes"
+                description="Explore the best cafes for a perfect break."
+              />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/attractions",
-          element: <ProtectedRoute><CategoryPage category="Attraction" title="Attractions" description="Discover top attractions across India." /></ProtectedRoute>,
+          element: (
+            <ProtectedRoute>
+              <CategoryPage
+                category="Attraction"
+                title="Attractions"
+                description="Discover top attractions across India."
+              />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/hotels",
-          element: <ProtectedRoute><CategoryPage category="Hotel" title="Hotels" description="Find the perfect hotel for your stay." /></ProtectedRoute>,
+          element: (
+            <ProtectedRoute>
+              <CategoryPage
+                category="Hotel"
+                title="Hotels"
+                description="Find the perfect hotel for your stay."
+              />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/guesthouses",
-          element: <ProtectedRoute><CategoryPage category="Guesthouse" title="Guesthouses" description="Find cozy and affordable guesthouses." /></ProtectedRoute>,
+          element: (
+            <ProtectedRoute>
+              <CategoryPage
+                category="Guesthouse"
+                title="Guesthouses"
+                description="Find cozy and affordable guesthouses."
+              />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/search",
-          element: <ProtectedRoute><SearchResults /></ProtectedRoute>,
+          element: (
+            <ProtectedRoute>
+              <SearchResults />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/favorites",
-          element: <ProtectedRoute><Favorites /></ProtectedRoute>,
+          element: (
+            <ProtectedRoute>
+              <Favorites />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/map",
-          element: <ProtectedRoute><MapView /></ProtectedRoute>,
+          element: (
+            <ProtectedRoute>
+              <MapView />
+            </ProtectedRoute>
+          ),
         },
         {
-          path: "/profile", // <-- HERE IS THE NEW PROFILE ROUTE
+          path: "/profile",
           element: (
             <ProtectedRoute>
               <Profile />
@@ -92,7 +149,11 @@ function App() {
         },
         {
           path: "/admin",
-          element: <ProtectedRoute adminOnly={true}><AdminDashboard /></ProtectedRoute>,
+          element: (
+            <ProtectedRoute adminOnly={true}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          ),
         },
         { path: "*", element: <Navigate to="/" replace /> },
       ],
