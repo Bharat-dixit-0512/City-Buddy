@@ -17,7 +17,7 @@ const DetailsModal = ({ item, onClose }) => {
   const { register: registerClaim, handleSubmit: handleSubmitClaim, reset: resetClaim } = useForm();
 
   if (!item) return null;
-  
+
   const hasCoordinates = item.location?.coordinates?.length >= 2;
   const getDirectionsUrl = hasCoordinates ? `https://www.google.com/maps?q=${item.location.coordinates[1]},${item.location.coordinates[0]}` : null;
 
