@@ -15,8 +15,22 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 4001;
 const URI = process.env.MongoDBURI;
+const allowedOrigins = (process.env.CORS_ORIGIN || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
-app.use(cors());
+const corsOptions = {
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("Not allowed by CORS"));
+  },
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use("/places", placeRouter);
@@ -59,7 +73,7 @@ process.on("uncaughtException", (err) => {
 
 if (URI) {
   mongoose
-    .connect(URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .connect(URI)
     .then(() => console.log("Connection Successful with MongoDB 😁"))
     .catch((error) => console.error("❌ MongoDB Connection Error:", error));
 } else {

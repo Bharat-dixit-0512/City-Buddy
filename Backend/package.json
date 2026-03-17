@@ -5,8 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -14,6 +15,9 @@
   },
   "author": "Bharat",
   "license": "ISC",
+  "engines": {
+    "node": ">=20"
+  },
   "bugs": {
     "url": "https://github.com/Bharat-dixit-0512/City-Buddy/issues"
   },
