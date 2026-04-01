@@ -1,48 +1,55 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const placeSchema = new Schema({
-  name: { type: String, required: true },
-  city: { type: String, required: true },
-  area: { type: String, required: true },
-  pincode: { type: String, required: true },
-  description: { type: String, required: true },
-  image: String,
-  category: {
-    type: String,
-    required: true,
-    enum: ['Restaurant', 'Cafe', 'Attraction', 'Hotel', 'Guesthouse'],
-  },
-  location: {
-    type: {
+const placeSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    city: { type: String, required: true },
+    area: { type: String, required: true },
+    pincode: { type: String, required: true },
+    description: { type: String, required: true },
+    image: String,
+    category: {
       type: String,
-      enum: ['Point'],
-      default: 'Point',
+      required: true,
+      enum: ["Restaurant", "Cafe", "Attraction", "Hotel", "Guesthouse"],
     },
-    coordinates: {
-      type: [Number], // [longitude, latitude]
+    location: {
+      type: {
+        type: String,
+        enum: ["Point"],
+        default: "Point",
+      },
+      coordinates: {
+        type: [Number],
+      },
     },
+    rating: { type: Number, default: 0 },
+    reviewCount: { type: Number, default: 0 },
+    tags: [String],
+    priceForTwo: { type: Number },
+    priceCategory: {
+      type: String,
+      enum: ["Budget", "Mid-Range", "Luxury"],
+    },
+    pricePerNight: { type: Number },
+    phone: { type: String },
+    website: { type: String },
+    operatingHours: {
+      type: Map,
+      of: String,
+    },
+    claimedBy: { type: Schema.Types.ObjectId, ref: "User", default: null },
   },
-  rating: { type: Number, default: 0 },
-  reviewCount: { type: Number, default: 0 },
-  tags: [String],
-  priceForTwo: { type: Number },
-  priceCategory: {
-    type: String,
-    enum: ['Budget', 'Mid-Range', 'Luxury'],
-  },
-  pricePerNight: { type: Number },
-  phone: { type: String },
-  website: { type: String },
-  operatingHours: {
-    type: Map,
-    of: String,
-  },
-  claimedBy: { type: Schema.Types.ObjectId, ref: 'User', default: null },
-}, { timestamps: true });
+  { timestamps: true }
+);
 
-placeSchema.index({ location: '2dsphere' });
-placeSchema.index({ name: 'text', city: 'text', description: 'text', tags: 'text' });
+placeSchema.index({ location: "2dsphere" });
+placeSchema.index({ name: "text", city: "text", description: "text", tags: "text" });
+placeSchema.index({ category: 1, rating: -1 });
+placeSchema.index({ category: 1, createdAt: -1 });
+placeSchema.index({ category: 1, priceForTwo: 1 });
+placeSchema.index({ category: 1, pricePerNight: 1 });
 
 const Place = mongoose.model("Place", placeSchema);
 export default Place;

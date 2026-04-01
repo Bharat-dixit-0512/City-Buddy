@@ -24,6 +24,21 @@ CityBuddy is a travel web app for discovering hotels, cafes, restaurants, and at
    - Copy `frontend/.env.example` to `frontend/.env`
    - Copy `Backend/.env.example` to `Backend/.env`
 
+## Helpful Commands
+
+- `npm run frontend:dev`
+- `npm run backend:dev`
+- `npm run frontend:build`
+- `npm run backend:start`
+
+## App Mode
+
+CityBuddy now supports installable app behavior through a web app manifest and service worker.
+
+- In supported browsers, open the deployed frontend and use the `Install App` button in the navbar.
+- On mobile, you can also use the browser's `Add to Home Screen` flow if the install prompt is not shown automatically.
+- Repeat visits are faster because the app shell, common images, and public list data are cached.
+
 ## Deployment
 
 ### Frontend on Vercel

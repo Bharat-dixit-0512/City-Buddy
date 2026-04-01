@@ -1,24 +1,28 @@
-import React from 'react';
-
 const Pagination = ({ page, pages, onPageChange }) => {
   if (pages <= 1) return null;
 
-  const pageNumbers = [...Array(pages).keys()].map(i => i + 1);
+  const pageNumbers = [...Array(pages).keys()].map((i) => i + 1);
 
   return (
-    <div className="flex justify-center items-center gap-2 mt-8">
+    <div className="mt-8 flex items-center justify-center gap-2">
       <button
         onClick={() => onPageChange(page - 1)}
         disabled={page === 1}
-        className="px-3 py-1 rounded-md bg-gray-200 disabled:opacity-50"
+        className="rounded-md border border-slate-200 bg-white px-3 py-1 text-slate-700 shadow-sm hover:border-[#0077B6] hover:text-[#0077B6] disabled:opacity-50"
+        type="button"
       >
         Prev
       </button>
-      {pageNumbers.map(number => (
+      {pageNumbers.map((number) => (
         <button
           key={number}
           onClick={() => onPageChange(number)}
-          className={`px-3 py-1 rounded-md ${page === number ? 'bg-[#FF7B54] text-white' : 'bg-gray-200'}`}
+          className={`rounded-md px-3 py-1 shadow-sm ${
+            page === number
+              ? "bg-[#FF7B54] text-white"
+              : "border border-slate-200 bg-white text-slate-700 hover:border-[#0077B6] hover:text-[#0077B6]"
+          }`}
+          type="button"
         >
           {number}
         </button>
@@ -26,7 +30,8 @@ const Pagination = ({ page, pages, onPageChange }) => {
       <button
         onClick={() => onPageChange(page + 1)}
         disabled={page === pages}
-        className="px-3 py-1 rounded-md bg-gray-200 disabled:opacity-50"
+        className="rounded-md border border-slate-200 bg-white px-3 py-1 text-slate-700 shadow-sm hover:border-[#0077B6] hover:text-[#0077B6] disabled:opacity-50"
+        type="button"
       >
         Next
       </button>

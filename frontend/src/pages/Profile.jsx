@@ -1,14 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import toast from "react-hot-toast";
-import { userAuth } from "../context/AuthProvider";
+import { userAuth } from "../context/useAuth";
 import { User, Mail, Award, Star } from "lucide-react";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4001";
+import { api } from "../services/api";
 
 const Profile = () => {
-  const { authUser, login, refreshUser } = userAuth();
+  const { authUser, refreshUser } = userAuth();
   const [loading, setLoading] = useState(false);
   const [requestLoading, setRequestLoading] = useState(false);
   const {
@@ -27,10 +25,7 @@ const Profile = () => {
         currentPassword: data.currentPassword,
         newPassword: data.newPassword,
       };
-      const response = await axios.put(
-        `${API_BASE}/user/update-password`,
-        payload
-      );
+      const response = await api.put("/user/update-password", payload);
       toast.success(response.data.message);
       reset();
     } catch (error) {
@@ -45,7 +40,7 @@ const Profile = () => {
   const handleAdminRequest = async () => {
     setRequestLoading(true);
     try {
-      await axios.post(`${API_BASE}/user/request-admin`);
+      await api.post("/user/request-admin");
       await refreshUser();
       toast.success("Admin access request submitted successfully.");
     } catch (error) {
@@ -56,18 +51,18 @@ const Profile = () => {
   };
 
   if (!authUser) {
-    return <div className="text-center p-12">Loading profile...</div>;
+    return <div className="p-12 text-center">Loading profile...</div>;
   }
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] p-4 md:p-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">
+      <div className="mx-auto max-w-4xl">
+        <h1 className="mb-8 text-center text-3xl font-bold md:text-4xl">
           My Profile
         </h1>
 
-        <div className="bg-white p-6 rounded-2xl shadow-lg border mb-8">
-          <h2 className="text-2xl font-bold mb-4">Account Details</h2>
+        <div className="mb-8 rounded-2xl border bg-white p-6 shadow-lg">
+          <h2 className="mb-4 text-2xl font-bold">Account Details</h2>
           <div className="space-y-3">
             <div className="flex items-center gap-3">
               <User className="text-[#0077B6]" />
@@ -83,12 +78,12 @@ const Profile = () => {
             </div>
             {authUser.badges && authUser.badges.length > 0 && (
               <div className="flex items-start gap-3 pt-2">
-                <Award className="text-green-600 mt-1" />
+                <Award className="mt-1 text-green-600" />
                 <div className="flex flex-wrap gap-2">
                   {authUser.badges.map((badge) => (
                     <span
                       key={badge}
-                      className="text-xs bg-green-100 text-green-800 font-semibold px-2 py-1 rounded-full"
+                      className="rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-800"
                     >
                       {badge}
                     </span>
@@ -97,23 +92,23 @@ const Profile = () => {
               </div>
             )}
             {authUser.role === "user" && (
-              <div className="pt-4 border-t mt-4">
+              <div className="mt-4 border-t pt-4">
                 {authUser.adminRequestStatus === "none" && (
                   <button
                     onClick={handleAdminRequest}
                     disabled={requestLoading}
-                    className="px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 disabled:opacity-50 cursor-pointer"
+                    className="cursor-pointer rounded-lg bg-yellow-500 px-4 py-2 font-semibold text-white hover:bg-yellow-600 disabled:opacity-50"
                   >
                     {requestLoading ? "Submitting..." : "Request Admin Access"}
                   </button>
                 )}
                 {authUser.adminRequestStatus === "pending" && (
-                  <p className="text-yellow-600 font-medium">
+                  <p className="font-medium text-yellow-600">
                     Your admin request is pending review.
                   </p>
                 )}
                 {authUser.adminRequestStatus === "denied" && (
-                  <p className="text-red-600 font-medium">
+                  <p className="font-medium text-red-600">
                     Your previous admin request was denied.
                   </p>
                 )}
@@ -122,11 +117,11 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl shadow-lg border">
-          <h2 className="text-2xl font-bold mb-4">Change Password</h2>
+        <div className="rounded-2xl border bg-white p-6 shadow-lg">
+          <h2 className="mb-4 text-2xl font-bold">Change Password</h2>
           <form onSubmit={handleSubmit(onPasswordSubmit)} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="mb-1 block text-sm font-medium">
                 Current Password
               </label>
               <input
@@ -134,16 +129,16 @@ const Profile = () => {
                 {...register("currentPassword", {
                   required: "Current password is required.",
                 })}
-                className="w-full p-2 border rounded-lg"
+                className="w-full rounded-lg border p-2"
               />
               {errors.currentPassword && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="mt-1 text-sm text-red-500">
                   {errors.currentPassword.message}
                 </p>
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="mb-1 block text-sm font-medium">
                 New Password
               </label>
               <input
@@ -155,16 +150,16 @@ const Profile = () => {
                     message: "Password must be at least 6 characters.",
                   },
                 })}
-                className="w-full p-2 border rounded-lg"
+                className="w-full rounded-lg border p-2"
               />
               {errors.newPassword && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="mt-1 text-sm text-red-500">
                   {errors.newPassword.message}
                 </p>
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label className="mb-1 block text-sm font-medium">
                 Confirm New Password
               </label>
               <input
@@ -174,10 +169,10 @@ const Profile = () => {
                   validate: (value) =>
                     value === newPassword || "The passwords do not match.",
                 })}
-                className="w-full p-2 border rounded-lg"
+                className="w-full rounded-lg border p-2"
               />
               {errors.confirmPassword && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="mt-1 text-sm text-red-500">
                   {errors.confirmPassword.message}
                 </p>
               )}
@@ -186,7 +181,7 @@ const Profile = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-2 bg-[#FF7B54] text-white font-semibold rounded-lg hover:bg-[#E85D04] disabled:opacity-50 cursor-pointer"
+                className="cursor-pointer rounded-lg bg-[#FF7B54] px-6 py-2 font-semibold text-white hover:bg-[#E85D04] disabled:opacity-50"
               >
                 {loading ? "Updating..." : "Update Password"}
               </button>

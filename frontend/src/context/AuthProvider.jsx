@@ -1,15 +1,11 @@
 import React, {
-  createContext,
-  useContext,
   useState,
   useEffect,
   useCallback,
 } from "react";
-import axios from "axios";
 import toast from "react-hot-toast";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4001";
-const AuthContext = createContext();
+import { api } from "../services/api";
+import AuthContext from "./auth-context";
 
 const FullPageLoader = () => (
   <div
@@ -26,32 +22,32 @@ const FullPageLoader = () => (
   </div>
 );
 
+const getStoredUser = () => {
+  try {
+    const storedUser = localStorage.getItem("authUser");
+    return storedUser ? JSON.parse(storedUser) : null;
+  } catch {
+    return null;
+  }
+};
+
 const AuthProvider = ({ children }) => {
-  const [authUser, setAuthUser] = useState(null);
+  const [authUser, setAuthUser] = useState(getStoredUser);
   const [token, setToken] = useState(localStorage.getItem("authToken") || null);
   const [loading, setLoading] = useState(true);
-
-  const configureAxios = (jwtToken) => {
-    if (jwtToken) {
-      axios.defaults.headers.common["Authorization"] = `Bearer ${jwtToken}`;
-    } else {
-      delete axios.defaults.headers.common["Authorization"];
-    }
-  };
 
   const logout = useCallback(() => {
     setAuthUser(null);
     setToken(null);
     localStorage.removeItem("authUser");
     localStorage.removeItem("authToken");
-    configureAxios(null);
     toast.success("Logged out successfully");
   }, []);
 
   const refreshUser = useCallback(async () => {
     if (token) {
       try {
-        const res = await axios.get(`${API_BASE}/user/me`);
+        const res = await api.get("/user/me");
         setAuthUser(res.data);
         localStorage.setItem("authUser", JSON.stringify(res.data));
         return res.data;
@@ -66,11 +62,11 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initializeAuth = async () => {
       if (token) {
-        configureAxios(token);
         await refreshUser();
       }
       setLoading(false);
     };
+
     initializeAuth();
   }, [token, refreshUser]);
 
@@ -79,7 +75,6 @@ const AuthProvider = ({ children }) => {
     setToken(jwtToken);
     localStorage.setItem("authUser", JSON.stringify(userData));
     localStorage.setItem("authToken", jwtToken);
-    configureAxios(jwtToken);
   };
 
   const isFavorite = (itemId) => {
@@ -91,9 +86,10 @@ const AuthProvider = ({ children }) => {
       toast.error("You must be logged in to add favorites.");
       return;
     }
+
     try {
-      await axios.post(`${API_BASE}/user/favorites/${itemId}`);
-      await refreshUser(); // This will fetch the latest user data including badges/points
+      await api.post(`/user/favorites/${itemId}`);
+      await refreshUser();
       toast.success("Favorites updated!");
     } catch (error) {
       console.error("Failed to toggle favorite:", error);
@@ -126,5 +122,4 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-export const userAuth = () => useContext(AuthContext);
 export default AuthProvider;

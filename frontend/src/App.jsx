@@ -1,3 +1,4 @@
+import { Suspense, lazy } from "react";
 import {
   RouterProvider,
   createBrowserRouter,
@@ -5,34 +6,55 @@ import {
   Navigate,
 } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Home from "./components/Home";
-import Login from "./components/profile/Login";
 import Footer from "./components/Footer";
-import Signup from "./components/profile/Signup";
-import TermsOfServices from "./components/second/TermsOfServices";
-import ContactUs from "./components/second/ContactUs";
-import HelpCenter from "./components/second/HelpCenter";
-import PrivacyPolicy from "./components/second/PrivacyPolicy";
-import CategoryPage from "./pages/CategoryPage";
-import SearchResults from "./pages/SearchResults";
-import Favorites from "./pages/Favorites";
-import MapView from "./pages/MapView";
-import Profile from "./pages/Profile";
 import ScrollToTop from "./components/motion/ScrollToTop";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/ProtectedRoute";
-import AdminDashboard from "./components/AdminDashboard";
-import { userAuth } from "./context/AuthProvider";
+import Spinner from "./components/shared/Spinner";
+import { useTheme } from "./context/useTheme";
 
-const RootRedirect = () => {
-  const { authUser } = userAuth();
-  return authUser ? <Home /> : <Home />;
-};
+const Home = lazy(() => import("./components/Home"));
+const Login = lazy(() => import("./components/profile/Login"));
+const Signup = lazy(() => import("./components/profile/Signup"));
+const TermsOfServices = lazy(() =>
+  import("./components/second/TermsOfServices")
+);
+const ContactUs = lazy(() => import("./components/second/ContactUs"));
+const HelpCenter = lazy(() => import("./components/second/HelpCenter"));
+const PrivacyPolicy = lazy(() => import("./components/second/PrivacyPolicy"));
+const CategoryPage = lazy(() => import("./pages/CategoryPage"));
+const SearchResults = lazy(() => import("./pages/SearchResults"));
+const Favorites = lazy(() => import("./pages/Favorites"));
+const MapView = lazy(() => import("./pages/MapView"));
+const Profile = lazy(() => import("./pages/Profile"));
+const AdminDashboard = lazy(() => import("./components/AdminDashboard"));
+
+const PageLoader = () => (
+  <div className="flex min-h-[50vh] items-center justify-center">
+    <Spinner />
+  </div>
+);
+
+const renderPage = (Component, props) => (
+  <Suspense fallback={<PageLoader />}>
+    <Component {...props} />
+  </Suspense>
+);
 
 function Layout() {
+  const { isDark } = useTheme();
+
   return (
     <>
-      <Toaster />
+      <Toaster
+        toastOptions={{
+          style: {
+            background: isDark ? "#0f172a" : "#ffffff",
+            color: isDark ? "#e2e8f0" : "#0f172a",
+            border: `1px solid ${isDark ? "rgba(148,163,184,0.2)" : "rgba(15,23,42,0.08)"}`,
+          },
+        }}
+      />
       <Navbar />
       <ScrollToTop />
       <div className="flex-grow">
@@ -48,22 +70,25 @@ function App() {
     {
       element: <Layout />,
       children: [
-        { path: "/", element: <RootRedirect /> },
-        { path: "/termsOfServices", element: <TermsOfServices /> },
-        { path: "/contactUs", element: <ContactUs /> },
-        { path: "/helpCenter", element: <HelpCenter /> },
-        { path: "/privacyPolicy", element: <PrivacyPolicy /> },
-        { path: "/login", element: <Login /> },
-        { path: "/signup", element: <Signup /> },
+        { path: "/", element: renderPage(Home) },
+        {
+          path: "/termsOfServices",
+          element: renderPage(TermsOfServices),
+        },
+        { path: "/contactUs", element: renderPage(ContactUs) },
+        { path: "/helpCenter", element: renderPage(HelpCenter) },
+        { path: "/privacyPolicy", element: renderPage(PrivacyPolicy) },
+        { path: "/login", element: renderPage(Login) },
+        { path: "/signup", element: renderPage(Signup) },
         {
           path: "/restaurants",
           element: (
             <ProtectedRoute>
-              <CategoryPage
-                category="Restaurant"
-                title="Restaurants"
-                description="Discover top-rated restaurants."
-              />
+              {renderPage(CategoryPage, {
+                category: "Restaurant",
+                title: "Restaurants",
+                description: "Discover top-rated restaurants.",
+              })}
             </ProtectedRoute>
           ),
         },
@@ -71,11 +96,11 @@ function App() {
           path: "/cafes",
           element: (
             <ProtectedRoute>
-              <CategoryPage
-                category="Cafe"
-                title="Cafes"
-                description="Explore the best cafes for a perfect break."
-              />
+              {renderPage(CategoryPage, {
+                category: "Cafe",
+                title: "Cafes",
+                description: "Explore the best cafes for a perfect break.",
+              })}
             </ProtectedRoute>
           ),
         },
@@ -83,11 +108,11 @@ function App() {
           path: "/attractions",
           element: (
             <ProtectedRoute>
-              <CategoryPage
-                category="Attraction"
-                title="Attractions"
-                description="Discover top attractions across India."
-              />
+              {renderPage(CategoryPage, {
+                category: "Attraction",
+                title: "Attractions",
+                description: "Discover top attractions across India.",
+              })}
             </ProtectedRoute>
           ),
         },
@@ -95,11 +120,11 @@ function App() {
           path: "/hotels",
           element: (
             <ProtectedRoute>
-              <CategoryPage
-                category="Hotel"
-                title="Hotels"
-                description="Find the perfect hotel for your stay."
-              />
+              {renderPage(CategoryPage, {
+                category: "Hotel",
+                title: "Hotels",
+                description: "Find the perfect hotel for your stay.",
+              })}
             </ProtectedRoute>
           ),
         },
@@ -107,51 +132,37 @@ function App() {
           path: "/guesthouses",
           element: (
             <ProtectedRoute>
-              <CategoryPage
-                category="Guesthouse"
-                title="Guesthouses"
-                description="Find cozy and affordable guesthouses."
-              />
+              {renderPage(CategoryPage, {
+                category: "Guesthouse",
+                title: "Guesthouses",
+                description: "Find cozy and affordable guesthouses.",
+              })}
             </ProtectedRoute>
           ),
         },
         {
           path: "/search",
           element: (
-            <ProtectedRoute>
-              <SearchResults />
-            </ProtectedRoute>
+            <ProtectedRoute>{renderPage(SearchResults)}</ProtectedRoute>
           ),
         },
         {
           path: "/favorites",
-          element: (
-            <ProtectedRoute>
-              <Favorites />
-            </ProtectedRoute>
-          ),
+          element: <ProtectedRoute>{renderPage(Favorites)}</ProtectedRoute>,
         },
         {
           path: "/map",
-          element: (
-            <ProtectedRoute>
-              <MapView />
-            </ProtectedRoute>
-          ),
+          element: <ProtectedRoute>{renderPage(MapView)}</ProtectedRoute>,
         },
         {
           path: "/profile",
-          element: (
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          ),
+          element: <ProtectedRoute>{renderPage(Profile)}</ProtectedRoute>,
         },
         {
           path: "/admin",
           element: (
             <ProtectedRoute adminOnly={true}>
-              <AdminDashboard />
+              {renderPage(AdminDashboard)}
             </ProtectedRoute>
           ),
         },

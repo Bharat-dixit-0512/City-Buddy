@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { ChevronUp } from "lucide-react";
 import useScrollToTop from "./motion/useScrollToTop";
-import { userAuth } from "../context/AuthProvider";
+import { userAuth } from "../context/useAuth";
 
 const Footer = () => {
   const { isVisible, scrollToTop } = useScrollToTop();
   const { authUser } = userAuth();
+  const footerLinkClass =
+    "inline-flex rounded-sm text-[#F9FAFB]/85 hover:text-[#00B4D8] focus-visible:text-[#00B4D8]";
 
   return (
     <footer className="bg-[#023047] text-[#F9FAFB] pt-12 pb-6 relative border-t border-[#E9ECEF]/20">
@@ -23,22 +25,22 @@ const Footer = () => {
           <h3 className="text-xl font-semibold mb-4 text-[#FFD60A]">Explore</h3>
           <ul className="space-y-2">
             <li>
-              <Link to="/restaurants" className="hover:text-[#00B4D8]">
+              <Link to="/restaurants" className={footerLinkClass}>
                 Restaurants
               </Link>
             </li>
             <li>
-              <Link to="/cafes" className="hover:text-[#00B4D8]">
+              <Link to="/cafes" className={footerLinkClass}>
                 Cafes
               </Link>
             </li>
             <li>
-              <Link to="/attractions" className="hover:text-[#00B4D8]">
+              <Link to="/attractions" className={footerLinkClass}>
                 Attractions
               </Link>
             </li>
             <li>
-              <Link to="/map" className="hover:text-[#00B4D8]">
+              <Link to="/map" className={footerLinkClass}>
                 Map View
               </Link>
             </li>
@@ -50,24 +52,24 @@ const Footer = () => {
           </h3>
           <ul className="space-y-2">
             <li>
-              <Link to="/favorites" className="hover:text-[#00B4D8]">
+              <Link to="/favorites" className={footerLinkClass}>
                 My Favorites
               </Link>
             </li>
             <li>
-              <Link to="/profile" className="hover:text-[#00B4D8]">
+              <Link to="/profile" className={footerLinkClass}>
                 My Profile
               </Link>
             </li>
             {!authUser && (
               <>
                 <li>
-                  <Link to="/login" className="hover:text-[#00B4D8]">
+                  <Link to="/login" className={footerLinkClass}>
                     Login
                   </Link>
                 </li>
                 <li>
-                  <Link to="/signup" className="hover:text-[#00B4D8]">
+                  <Link to="/signup" className={footerLinkClass}>
                     Sign Up
                   </Link>
                 </li>
@@ -79,22 +81,22 @@ const Footer = () => {
           <h3 className="text-xl font-semibold mb-4 text-[#FFD60A]">Support</h3>
           <ul className="space-y-2">
             <li>
-              <Link to="/helpCenter" className="hover:text-[#00B4D8]">
+              <Link to="/helpCenter" className={footerLinkClass}>
                 Help Center
               </Link>
             </li>
             <li>
-              <Link to="/contactUs" className="hover:text-[#00B4D8]">
+              <Link to="/contactUs" className={footerLinkClass}>
                 Contact Us
               </Link>
             </li>
             <li>
-              <Link to="/termsOfServices" className="hover:text-[#00B4D8]">
+              <Link to="/termsOfServices" className={footerLinkClass}>
                 Terms of Services
               </Link>
             </li>
             <li>
-              <Link to="/privacyPolicy" className="hover:text-[#00B4D8]">
+              <Link to="/privacyPolicy" className={footerLinkClass}>
                 Privacy Policy
               </Link>
             </li>
@@ -110,8 +112,9 @@ const Footer = () => {
       {isVisible && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 bg-[#FF7B54] text-white p-3 rounded-full shadow-lg"
+          className="fixed bottom-6 right-6 rounded-full bg-[#FF7B54] p-3 text-white shadow-lg hover:-translate-y-1 hover:bg-[#E85D04] hover:shadow-xl"
           aria-label="Back to top"
+          type="button"
         >
           <ChevronUp size={22} />
         </button>
