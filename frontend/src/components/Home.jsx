@@ -1,24 +1,16 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import axios from "axios";
 import Cards from "./cards/Cards";
 import Spinner from "./shared/Spinner";
 import DetailsModal from "./DetailsModal";
-import { getCached } from "../services/api";
 
 const slides = [
-  {
-    src: "/cityWallpaper.jpg",
-    alt: "A bright city skyline at sunset",
-  },
-  {
-    src: "https://w0.peakpx.com/wallpaper/371/290/HD-wallpaper-blue-neon-city-landscape.jpg",
-    alt: "A blue neon city skyline at night",
-  },
-  {
-    src: "/cityWallpaper2.jpg",
-    alt: "A modern city skyline with warm evening lights",
-  },
+  "/cityWallpaper.jpg",
+  "https://w0.peakpx.com/wallpaper/371/290/HD-wallpaper-blue-neon-city-landscape.jpg",
+  "/cityWallpaper2.jpg",
 ];
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:4001";
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -34,79 +26,60 @@ const Home = () => {
       setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
     }, 5000);
 
-    return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    const controller = new AbortController();
-
     const fetchHomeData = async () => {
       try {
-        const data = await getCached("/home", {
-          ttl: 5 * 60_000,
-          signal: controller.signal,
-        });
-        setHomeData(data);
+        const res = await axios.get(`${API_BASE}/home`);
+        setHomeData(res.data);
       } catch (error) {
-        if (error.code !== "ERR_CANCELED") {
-          console.error("Failed to fetch homepage data", error);
-        }
+        console.error("Failed to fetch homepage data");
       } finally {
         setLoading(false);
       }
     };
 
     fetchHomeData();
-
-    return () => controller.abort();
+    return () => clearInterval(timer);
   }, []);
 
   return (
     <div className="min-h-screen bg-[#F9FAFB]">
-      <div className="relative flex h-screen w-full items-center justify-center overflow-hidden">
+      <div className="relative w-full h-screen flex items-center justify-center overflow-hidden">
         {slides.map((slide, index) => (
-          <img
-            key={slide.src}
-            alt={slide.alt}
-            className={`absolute left-0 top-0 h-full w-full object-cover transition-opacity duration-1000 ${
+          <div
+            key={index}
+            className={`absolute top-0 left-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 ${
               index === currentSlide ? "opacity-100" : "opacity-0"
             }`}
-            decoding="async"
-            fetchPriority={index === 0 ? "high" : "auto"}
-            loading={index === 0 ? "eager" : "lazy"}
-            onError={(event) => {
-              event.currentTarget.src = "/cityWallpaper.jpg";
-            }}
-            src={slide.src}
+            style={{ backgroundImage: `url('${slide}')` }}
           />
         ))}
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="relative z-10 px-6 text-center text-white">
-          <h1 className="mb-6 text-4xl font-extrabold text-[#FFD60A] md:text-6xl">
+        <div className="absolute inset-0 bg-black/60"></div>
+        <div className="relative z-10 text-center text-white px-6">
+          <h1 className="text-4xl md:text-6xl font-extrabold mb-6 text-[#FFD60A]">
             Discover Your Next{" "}
             <span className="animate-pulse text-[#FF7B54]">Adventure</span>
           </h1>
-          <p className="mx-auto mb-8 max-w-2xl text-lg md:text-xl">
-            Discover trusted stays, charming cafes, and must-see attractions.
-            CityBuddy curates your perfect journey.
+          <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
+            Discover trusted stays, charming cafés, and must-see
+            attractions—CityBuddy curates your perfect journey.
           </p>
           <NavLink to="/restaurants">
-            <button className="rounded-full bg-[#FF7B54] px-8 py-3 font-semibold text-white shadow-lg hover:bg-[#E85D04]">
+            <button className="bg-[#FF7B54] hover:bg-[#E85D04] text-white font-semibold py-3 px-8 rounded-full shadow-lg">
               Start Exploring
             </button>
           </NavLink>
         </div>
       </div>
-      <div className="mx-auto max-w-7xl space-y-16 px-4 py-16">
+      <div className="max-w-7xl mx-auto py-16 px-4 space-y-16">
         {loading ? (
           <Spinner />
         ) : (
           <>
             <section>
-              <h2 className="mb-8 text-center text-3xl font-bold">
+              <h2 className="text-3xl font-bold text-center mb-8">
                 Top Rated Places
               </h2>
-              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {homeData.topRatedPlaces.map((item) => (
                   <Cards
                     key={item._id}
@@ -117,10 +90,10 @@ const Home = () => {
               </div>
             </section>
             <section>
-              <h2 className="mb-8 text-center text-3xl font-bold">
+              <h2 className="text-3xl font-bold text-center mb-8">
                 Newly Added
               </h2>
-              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {homeData.newlyAddedPlaces.map((item) => (
                   <Cards
                     key={item._id}
